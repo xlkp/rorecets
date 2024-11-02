@@ -38,7 +38,7 @@ rorecets/
 
 Al trabajar con angular en la Dual he decidido hacer la estructura de esta aplicación parecida a cómo sería con este framework.
 
-También he decidido implementar en la estructura lo que viene a ser los modulos, pero en vez de separarlos por componentes, he decidio estructurarlos por el estándar MVC(Modelo Vista Controlador).
+También he implementado en la estructura lo que viene a ser los modulos, pero en vez de separarlos por componentes, los he estructurarado por el estándar MVC(Modelo Vista Controlador).
 
 ## EXTRAS
 
