@@ -1,0 +1,14 @@
+.vscode/
+
+# ocultados logs para no desvelar IPs
+*.log
+var/lock
+var/log
+var/run
+
+# ocultada toda la configuracion para acceder a base de datos
+config/config.php
+apache2.config
+docker-compose.yml
+mysql-db.sql
+PHP.Dockerfile
