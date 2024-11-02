@@ -4,6 +4,7 @@
 
 // 20241028 creada la estructura
 
+``` shell
 rorecets/
 ├── app/
 │   ├── controllers/
@@ -32,6 +33,8 @@ rorecets/
 │   └──  index.php
 └──.env
 
+```
+
 ## IDEA
 
 // 20241027 pensada la idea
@@ -49,11 +52,12 @@ También he implementado en la estructura lo que viene a ser los modulos, pero e
 
 // 20241102 diseñado y creado el sql (va a ir cambiando dependiendo las necesidades)
 
+```sql
 create table users (
     id_user int primary key auto_increment,
     name varchar(50) not null,
     email varchar(100) unique not null,
-    password varchar(255) not null,
+    pwd varchar(255) not null,
     registration_date timestamp default current_timestamp
 );
 
@@ -76,7 +80,7 @@ create table recipes_ingredients (
     id_recipe_ingredient int primary key auto_increment,
     id_recipe int not null,
     id_ingredient int not null,
-    quantity decimal(5, 2) not null,
+    quantity int not null,
     unit varchar(50),
     foreign key (id_recipe) references recipes(id_recipe) on delete cascade,
     foreign key (id_ingredient) references ingredients(id_ingredient) on delete cascade,
@@ -87,7 +91,7 @@ create table comments (
     id_comment int primary key auto_increment,
     id_recipe int not null,
     id_user int not null,
-    text text not null,
+    description text not null,
     comment_date timestamp default current_timestamp,
     foreign key (id_recipe) references recipes(id_recipe) on delete cascade,
     foreign key (id_user) references users(id_user) on delete cascade
