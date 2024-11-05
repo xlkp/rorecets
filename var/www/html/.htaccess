@@ -1,0 +1,5 @@
+# Router en el servidor
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ router.php

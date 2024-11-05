@@ -6,10 +6,9 @@
 
 ``` shell
 rorecets/
-├── app/
+├──app/
 │   ├── controllers/
 │   │   ├── session_controller.php
-│   │   ├── router.php
 │   │   ├── register.php
 │   │   └── login.php
 │   ├── models/
@@ -23,15 +22,16 @@ rorecets/
 │       ├── Controller.php
 │       ├── Model.php
 │       └── View.php
-├── config/
+├──config/
 │   └── config.php
-├── public/
+├──public/
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
 │   │   └── scripts.js
 │   └──  index.php
-└──.env
+├──index.php (router)
+└──.htaccess
 
 ```
 
@@ -45,8 +45,14 @@ También he implementado en la estructura lo que viene a ser los modulos, pero e
 
 ## EXTRAS
 
-- CONTROLADORES:
--- Router -> Controlador que me permite manejar rutas
+// 20241104 cambiada manera de usar el router
+
+- Router con .htaccess:
+-- La manera más sencilla sin un framework en php es con el .htaccess, me he comido demasiado código basura de StackOverflow y guías fuera de mí nivel para hacer un controlador de rutas simple por lo que me he metido a fondo a investigar sobre el htaccess y me ha encantado ya que es mucho más intuitivo que andar instalando laravel o mirandome un artículo que no me explica algo que entienda, aparte de que utiliza expresiones regulares que se me dan genial.
+
+-- He redirigido todas las rutas al index.php, que hace de router para el resto de las rutas, esto lo he conseguido mediante el .htaccess y definiendo las rutas relativas a los controladores hacia su directorio y fichero respectivo para tener unas rutas más user friendly.
+
+Esta guía : <https://www.educative.io/answers/how-to-create-a-basic-php-router> me ha venido de lujo para lograr esto.
 
 ## SQL
 
