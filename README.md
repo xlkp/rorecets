@@ -13,23 +13,23 @@ rorecets/
 │   │   └── login.php
 │   ├── models/
 │   │   └── User.php
-│   ├── views/
-│   │   ├── home/
-│   │   │   └── index.php
-│   │   └── layouts/
-│   │       └── main.php
-│   └── core/
-│       ├── Controller.php
-│       ├── Model.php
-│       └── View.php
+│   └── views/
+│       ├── home/
+│       │   └── index.php
+│       ├── auth/
+│       │   ├── login.html
+│       │   └── register.html
+│       └── layouts/
+│           ├── 404.php
+│           └── admin.php
 ├──config/
 │   └── config.php
 ├──public/
 │   ├── css/
-│   │   └── styles.css
+│   │   └── main.css
 │   ├── js/
-│   │   └── scripts.js
-│   └──  index.php
+│   │   └── main.js
+│   └── index.php
 ├──index.php (router)
 └──.htaccess
 
