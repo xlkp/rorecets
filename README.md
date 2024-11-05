@@ -30,7 +30,7 @@ rorecets/
 │   ├── js/
 │   │   └── main.js
 │   └── index.php
-├──index.php (router)
+├──router.php
 └──.htaccess
 
 ```
