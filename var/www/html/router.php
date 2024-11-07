@@ -8,12 +8,8 @@ switch ($request) {
         require __DIR__ . '/public/index.php';
         break;
 //------------------------- AUTH ---------------------   
-    case '/loginValidation':
-        require __DIR__ . '/app/controllers/login.php';
-        break;
-    
-    case '/registerValidation':
-        require __DIR__ . '/app/controllers/register.php';
+    case '/auth':
+        require __DIR__ . '/app/controllers/auth_controller.php';
         break;
 //------------------------- VISTAS ------------------ 
     case '/login':
@@ -23,20 +19,25 @@ switch ($request) {
     case '/register':
         require __DIR__ . '/app/views/auth/register.html';
         break;
+        
+    case '/change_password':
+        require __DIR__ . '/app/views/auth/change_password.html';
+        break;
  
     case '/home':
-        require __DIR__ . '/app/views/home/index.php';
+        require __DIR__ . '/app/controllers/home_controller.php';
         break;
 
     case '/admin':
-        require __DIR__ . '/app/views/admin.php';
+        require __DIR__ . '/app/views/layouts/admin.html';
         break;
+
     case '/profile':
-        require __DIR__ . '/app/views/layouts/user.php';
+        require __DIR__ . '/app/views/layouts/user.html';
         break;
 //------------------------- ERROR ---------------------
     default:
         http_response_code(404);
-        require __DIR__ . '/app/views/404.php';
+        require __DIR__ . '/app/views/layouts/404.html';
         break;
 }
