@@ -66,7 +66,7 @@ create table users (
     email varchar(100) unique not null,
     pwd varchar(255) not null,
     exp varchar(100) not null,
-    is_admin tinyint (1),
+    is_admin tinyint (1) default 0,
     registration_date timestamp default current_timestamp
 );
 
@@ -137,3 +137,11 @@ create table followers (
 - unregistered user : login, register, see home page.
 - registered user: login, close session, see all recipes, comment on them and follow other users, delete own recipes.
 - admin: login, close session, delete or make users admin too, delete users recipes.
+
+## admin inicialization
+
+``` sql
+-- password is literaly root hashed
+insert into users (username, pwd, email, exp, is_admin) VALUES ('master', '$2b$12$qCZuRjvq1qzyaaCkfyMbceqQ/vVT.tAZuvjYUjFnJ33hSZ1F.P9rS', 'master@xlkp.com', 'creator of many pot holes in history', 1);
+
+```
