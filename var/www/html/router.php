@@ -28,10 +28,13 @@ switch ($request) {
     case '/recipes':
     case '/profile':
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-            if ($request === '/recipes') {
-                require __DIR__ . '/app/views/home/my_recipes.html';
-            } else if ($request === '/profile') {
-                require __DIR__ . '/app/views/layouts/user.html';
+            switch ($request) {
+                case '/recipes':
+                    require __DIR__ . '/app/views/home/my_recipes.html';
+                    break;
+                case '/profile':
+                    require __DIR__ . '/app/views/layouts/user.html';
+                    break;
             }
         } else {
             http_response_code(403);

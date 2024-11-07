@@ -17,7 +17,7 @@ if (isset($_POST['username'])) {
 					header("Location: /");
 					exit;
 				} else {
-					$_SESSION['admin'] = false;
+					unset($_SESSION['admin']);
 					$_SESSION['logged_in'] = true;
 					header("Location: /");
 					exit;

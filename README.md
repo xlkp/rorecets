@@ -47,13 +47,18 @@ También he implementado en la estructura lo que viene a ser los modulos, pero e
 
 // 20241104 cambiada manera de usar el router
 
-- Router con .htaccess:
+- Router con .htaccess para redireccionar a inicio:
 
-- La manera más sencilla sin un framework en php es con el .htaccess, me he comido demasiado código basura de StackOverflow y guías fuera de mí nivel para hacer un controlador de rutas simple por lo que me he metido a fondo a investigar sobre el htaccess y me ha encantado ya que es mucho más intuitivo que andar instalando laravel o mirandome un artículo que no me explica algo que entienda, aparte de que utiliza expresiones regulares que se me dan genial.
+- La manera más sencilla sin un framework en php es con el .htaccess, me he comido demasiado código basura de StackOverflow, ChatGPT y guías fuera de mí nivel para hacer un controlador de rutas simple por lo que me he metido a fondo a investigar sobre el htaccess y me ha encantado ya que es mucho más intuitivo que andar instalando laravel o mirandome un artículo que no me explica algo que entienda, aparte de que utiliza expresiones regulares que se me dan genial.
 
-- He redirigido todas las rutas al index.php, que hace de router para el resto de las rutas, esto lo he conseguido mediante el .htaccess y definiendo las rutas relativas a los controladores hacia su directorio y fichero respectivo para tener unas rutas más user friendly.
+- He redirigido todas las rutas al router.php, que hace de router para el resto de las rutas, esto lo he conseguido mediante el .htaccess y definiendo las rutas relativas a los controladores hacia su directorio y fichero respectivo para tener unas rutas más user friendly.
 
 - Esta guía : <https://www.educative.io/answers/how-to-create-a-basic-php-router> me ha venido de lujo para lograr esto.
+
+// 20241107 creado protector de rutas
+
+- PROTECTOR DE RUTAS
+- Protego las rutas más sensibles con variables de sesión para evitar que por ejemplo entren a admin y me borren usuarios o recetas
 
 ## SQL
 
