@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// mediante las rutas controlo mediante el tipo de sesión lo que aparece en cada página
+// mediante las rutas controlo lo que aparece en la página por el tipo de sesion
 $request = $_SERVER['REQUEST_URI'];
 if ($request === '/') {
     if (!isset($_SESSION['logged_in'])) {

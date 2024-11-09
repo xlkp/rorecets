@@ -36,12 +36,18 @@ if (isset($_POST['username'])) {
 		}
 		//si no existe -> insertar
 		else {
-			$pwdHashed = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
-			$email = $_POST['mail'];
-			$exp = $_POST['exp'];
-			$sql = "INSERT INTO users (username,pwd,email,exp) values ('$username','$pwdHashed','$email','$exp')";
-			$pdo->prepare($sql)->execute();
-			echo "Registro correcto!";
+			if ($_POST['pwd'] === $_POST['pwdVerify']) {
+				$pwdHashed = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
+				$email = $_POST['email'];
+				$exp = $_POST['exp'];
+				$sql = "INSERT INTO users (username,pwd,email,exp) values ('$username','$pwdHashed','$email','$exp')";
+				$pdo->prepare($sql)->execute();
+				header("Location: /login");
+				exit;
+			} else {
+				header("Location: /register");
+				exit;
+			}
 		}
 	} else if (isset($_POST['pwdChange'])) {
 		$response = $pdo->query("SELECT pwd FROM users WHERE username='$username'");
