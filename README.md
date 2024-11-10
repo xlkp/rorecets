@@ -143,10 +143,14 @@ create table followers (
 - registered user: login, close session, see all recipes, comment on them and follow other users, delete own recipes.
 - admin: login, close session, delete or make users admin too, delete users recipes.
 
-## admin inicialization
+## SQL MODIFICATIONS OR INSERTIONS
 
 ``` sql
 -- password is literaly root hashed
 insert into users (username, pwd, email, exp, is_admin) VALUES ('master', '$2b$12$qCZuRjvq1qzyaaCkfyMbceqQ/vVT.tAZuvjYUjFnJ33hSZ1F.P9rS', 'master@xlkp.com', 'creator of many pot holes in history', 1);
+
+-- added route for the recipe image 
+ALTER TABLE recipes
+ADD COLUMN image_recipe VARCHAR(255) DEFAULT 'assets/img/recipes/default.png';
 
 ```
