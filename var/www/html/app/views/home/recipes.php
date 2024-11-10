@@ -1,5 +1,14 @@
 <?php
-require __DIR__ . ('/../app/controllers/session_controller.php');
+require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../models/Recipes.php';
+
+// construyo el objeto de recetas con la conexion a base de datos para evitarme 1000 lineas de código más.
+$recipes = new Recipes($pdo);
+
+// meter lógica con los get o post para obtener todas las recetas o crear una
+
+// todas, las 10 mejor valoradas, las mías, las de mis seguidores, random(opcional, no me quiero complicar tanto)
+// opcional: buscador de recetas según nombre, autor, ingredientes, etc. (lo mismo que la random, pal final si me da tiempo)
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +17,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rorecets</title>
+    <title>recetas</title>
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>

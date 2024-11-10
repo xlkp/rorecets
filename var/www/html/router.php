@@ -1,6 +1,5 @@
 <?php
 $request = $_SERVER['REQUEST_URI'];
-
 switch ($request) {
     case '':
     case '/':
@@ -28,16 +27,18 @@ switch ($request) {
     case '/recipes':
     case '/profile':
     case '/followers':
+        // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
+        session_start();
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
                 case '/recipes':
-                    require __DIR__ . '/app/views/home/my_recipes.php';
+                    require __DIR__ . '/app/views/home/recipes.php';
                     break;
                 case '/profile':
                     require __DIR__ . '/app/views/layouts/user.php';
                     break;
                 case '/followers':
-                    require __DIR__ . '/app/views/layouts/followers.php';
+                    require __DIR__ . '/app/views/home/followers.php';
                     break;
             }
         } else {

@@ -12,14 +12,13 @@ if (isset($_POST['username'])) {
 			if (password_verify($pwdValidate, $hash['pwd'])) {
 				session_start();
 				$_SESSION['username'] = $_POST['username'];
+				$_SESSION['logged_in'] = true;
 				if ($admin === 1) {
 					$_SESSION['admin'] = true;
-					$_SESSION['logged_in'] = true;
 					header("Location: /");
 					exit;
 				} else {
 					unset($_SESSION['admin']);
-					$_SESSION['logged_in'] = true;
 					header("Location: /");
 					exit;
 				}
@@ -78,8 +77,8 @@ if (isset($_POST['username'])) {
 } else {
 	if (isset($_POST['closeSession'])) {
 		session_start();
-		unset($_SESSION['admin']);
-		unset($_SESSION['logged_in']);
+		session_unset();
+		session_destroy();
 		header("Location: /login");
 		exit;
 	}
