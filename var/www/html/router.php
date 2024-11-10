@@ -6,12 +6,12 @@ switch ($request) {
     case '/':
         require __DIR__ . '/public/index.php';
         break;
-    //------------------------- AUTH ---------------------
+        //------------------------- AUTH ---------------------
     case '/auth':
         require __DIR__ . '/app/controllers/auth_controller.php';
         break;
 
-    //------------------------- VISTAS ------------------ 
+        //------------------------- VISTAS ------------------ 
     case '/login':
         require __DIR__ . '/app/views/auth/login.html';
         break;
@@ -27,13 +27,17 @@ switch ($request) {
         //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/recipes':
     case '/profile':
+    case '/followers':
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
                 case '/recipes':
-                    require __DIR__ . '/app/views/home/my_recipes.html';
+                    require __DIR__ . '/app/views/home/my_recipes.php';
                     break;
                 case '/profile':
-                    require __DIR__ . '/app/views/layouts/user.html';
+                    require __DIR__ . '/app/views/layouts/user.php';
+                    break;
+                case '/followers':
+                    require __DIR__ . '/app/views/layouts/followers.php';
                     break;
             }
         } else {
@@ -45,7 +49,7 @@ switch ($request) {
     case '/admin':
         session_start();
         if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
-            require __DIR__ . '/app/views/layouts/admin.html';
+            require __DIR__ . '/app/views/layouts/admin.php';
         } else {
             http_response_code(403);
             echo "Acceso denegado. Debes ser administrador para acceder a esta página.";

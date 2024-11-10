@@ -11,6 +11,7 @@ if (isset($_POST['username'])) {
 			$admin = $hash['is_admin'];
 			if (password_verify($pwdValidate, $hash['pwd'])) {
 				session_start();
+				$_SESSION['username'] = $_POST['username'];
 				if ($admin === 1) {
 					$_SESSION['admin'] = true;
 					$_SESSION['logged_in'] = true;
@@ -55,13 +56,15 @@ if (isset($_POST['username'])) {
 		if ($hash) {
 			$pwdValidate = $_POST['pwd'];
 			if (password_verify($pwdValidate, $hash['pwd'])) {
-				$pwdNewHashed = password_hash($_POST['pwdNew'], PASSWORD_DEFAULT);
-				$sql = "UPDATE users SET pwd='$pwdNewHashed' WHERE username='$username'";
-				//$pdo->query($sql)->fetch();
-				$pdo->prepare($sql)->execute();
-				$_SESSION['logged_in'] = true;
-				header("Location: /");
-				exit;
+				if ($_POST['pwdNew'] === $_POST['pwdVerify']) {
+					$pwdNewHashed = password_hash($_POST['pwdNew'], PASSWORD_DEFAULT);
+					$sql = "UPDATE users SET pwd='$pwdNewHashed' WHERE username='$username'";
+					$pdo->prepare($sql)->execute();
+					header("Location: /login");
+					exit;
+				} else {
+					echo 'Las contraseñas no coinciden';
+				}
 			} else {
 				echo "La contraseña actual es incorrecta";
 			}
@@ -73,6 +76,13 @@ if (isset($_POST['username'])) {
 		exit;
 	}
 } else {
+	if (isset($_POST['closeSession'])) {
+		session_start();
+		unset($_SESSION['admin']);
+		unset($_SESSION['logged_in']);
+		header("Location: /login");
+		exit;
+	}
 	header('Location: 404');
 	exit;
 }
