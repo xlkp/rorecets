@@ -82,16 +82,16 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                             echo 'Modera este foro y procura ayudar a la gente con lo que necesite 😊👍';
                         } else echo 'Prepara la cocina, porque hoy cae algo rico rico!! 🍽️🍳'; ?></p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a href="#"
-                            class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            <?php if (isset($menuAdmin)) {
-                                echo 'Moderar usuarios';
-                            } else echo 'Recetas mejor valoradas'; ?></a>
-                        <a href="#" class="text-sm/6 font-semibold text-gray-900">
-                            <?php if (isset($menuAdmin)) {
-                                echo 'Moderar recetas';
-                            } else echo 'Crear una receta'; ?><span
-                                aria-hidden="true">→</span></a>
+                        <?php if (isset($menuAdmin)) {
+                            echo '<a href="admin"
+                            class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Moderar usuarios</a>';
+                        } else echo '<a href="recipes"
+                            class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Recetas mejor valoradas</a>'; ?>
+                        <?php if (isset($menuAdmin)) {
+                            echo '<a href="recipes" class="text-sm/6 font-semibold text-gray-900">Moderar recetas<span
+                                aria-hidden="true">→</span></a>';
+                        } else echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-900">Crear receta<span
+                                aria-hidden="true">→</span></a>'; ?>
                     </div>
                 </div>
             </div>

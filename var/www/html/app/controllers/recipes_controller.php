@@ -7,5 +7,4 @@ require_once __DIR__ . '/../models/Recipes.php';
 $recipes = new Recipes($pdo);
 
 $allRecipes = $recipes->getAllRecipes();
-
-$recipeCreator = $recipes->getUserRecipeName();
+$authorRecipe = $recipes->getUserRecipeName();

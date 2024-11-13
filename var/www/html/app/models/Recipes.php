@@ -7,7 +7,6 @@ class Recipes
     private function getUser($attribute)
     {
         // $atributosPermitidos = ['id_user', 'username', 'email', 'pwd', 'exp', 'is_admin', 'registration_date'];
-
         // Consulta segura con parámetro preparado
         $query = "SELECT $attribute FROM users WHERE username = :username";
         $stmt = $this->pdo->prepare($query);

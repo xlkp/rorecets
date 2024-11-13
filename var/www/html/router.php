@@ -25,6 +25,7 @@ switch ($request) {
 
         //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/recipes':
+    case '/recipes/mine':
     case '/profile':
     case '/followers':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
@@ -33,6 +34,9 @@ switch ($request) {
             switch ($request) {
                 case '/recipes':
                     require __DIR__ . '/app/views/home/recipes.php';
+                    break;
+                case '/recipes/mine':
+                    require __DIR__ . '/app/views/home/my_recipes.php';
                     break;
                 case '/profile':
                     require __DIR__ . '/app/views/layouts/user.php';

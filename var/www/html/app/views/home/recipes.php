@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../controllers/recipes_controller.php';
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">inicio</a>
                     <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo ($_SESSION['username']) ?></a>
-                    <a href="followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis recetas</a>
+                    <a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis recetas</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
