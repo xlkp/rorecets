@@ -28,6 +28,7 @@ switch ($request) {
     case '/recipes/mine':
     case '/profile':
     case '/followers':
+    case '/validarReceta':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
         session_start();
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
@@ -43,6 +44,9 @@ switch ($request) {
                     break;
                 case '/followers':
                     require __DIR__ . '/app/views/home/followers.php';
+                    break;
+                case '/validarReceta':
+                    require __DIR__ . '/app/controllers/recipes_controller.php';
                     break;
             }
         } else {

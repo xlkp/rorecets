@@ -90,7 +90,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="recipes" class="text-sm/6 font-semibold text-gray-900">Moderar recetas<span
                                 aria-hidden="true">→</span></a>';
-                        } else echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-900">Crear receta<span
+                        } else echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-900">Mis recetas<span
                                 aria-hidden="true">→</span></a>'; ?>
                     </div>
                 </div>

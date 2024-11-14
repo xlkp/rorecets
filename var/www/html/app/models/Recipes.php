@@ -17,6 +17,13 @@ class Recipes
         return $result[$attribute] ?? null;
     }
 
+    public function getAllIngredients()
+    {
+        $query = "SELECT * FROM ingredients";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function __construct($pdo)
     {
@@ -44,9 +51,32 @@ class Recipes
     // nombre de la variable no te hace falta concatenar con puntos jeje
     // ya que con bind param te permite meter variables dentro de la query
     // por lo visto es una buena practica para no tener queries de un monton de texto
-    public function createRecipe($recipe_type, $title, $description, $instructions, $difficulty, $image_recipe)
+    public function createRecipe($recipe_type, $title, $description, $instructions, $difficulty, $ingredients, $quantities, $units, $new_ingredient =null, $image_recipe=null)
     {
+        // Obtener id del usuario
         $id_user = $this->getUser('id_user');
+
+        if ($new_ingredient) {
+            $query = "SELECT id_ingredient FROM ingredients WHERE name = :name";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':name', $new_ingredient);
+            $stmt->execute();
+
+            $ingredient = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$ingredient) {
+                $query = "INSERT INTO ingredients (name) VALUES (:name)";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindParam(':name', $new_ingredient);
+                $stmt->execute();
+                $new_ingredient_id = $this->pdo->lastInsertId();
+            } else {
+                $new_ingredient_id = $ingredient['id_ingredient'];
+            }
+            $ingredients[] = $new_ingredient_id;
+            $quantities[] = 1;
+            $units[] = 1;
+        }
+
         $query = "INSERT INTO recipes (id_user, recipe_type, title, description, instructions, difficulty, image_recipe) VALUES (:id_user, :type, :title, :description, :instructions, :difficulty, :image_recipe)";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id_user', $id_user);
@@ -55,10 +85,25 @@ class Recipes
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':instructions', $instructions);
         $stmt->bindParam(':difficulty', $difficulty);
-        // no olvidarme de añadirle la ruta con la fecha de creacion de la receta como parte del nombre
         $stmt->bindParam(':image_recipe', $image_recipe);
-        return $stmt->execute();
+        $stmt->execute();
+
+        $id_recipe = $this->pdo->lastInsertId();
+
+        // Insertar cada ingrediente en recipes_ingredients
+        for ($i = 0; $i < count($ingredients); $i++) {
+            $query = "INSERT INTO recipes_ingredients (id_recipe, id_ingredient, quantity, unit) VALUES (:id_recipe, :id_ingredient, :quantity, :unit)";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':id_recipe', $id_recipe);
+            $stmt->bindParam(':id_ingredient', $ingredients[$i]);
+            $stmt->bindParam(':quantity', $quantities[$i]);
+            $stmt->bindParam(':unit', $units[$i]);
+            $stmt->execute();
+        }
+
+        return true;
     }
+
 
     public function getUserRecipes()
     {
