@@ -25,10 +25,8 @@ switch ($request) {
 
         //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/recipes':
-    case '/recipes/mine':
     case '/profile':
     case '/followers':
-    case '/validarReceta':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
         session_start();
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
@@ -56,9 +54,21 @@ switch ($request) {
         }
         break;
     case '/admin':
+    case '/recipes/mine':
+    case '/validarReceta':
         session_start();
         if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
-            require __DIR__ . '/app/views/layouts/admin.php';
+            switch ($request) {
+                case '/admin':
+                    require __DIR__ . '/app/views/layouts/admin.php';
+                    break;
+                case '/recipes/mine':
+                    require __DIR__ . '/app/views/home/my_recipes.php';
+                    break;
+                case '/validarReceta':
+                    require __DIR__ . '/app/controllers/recipes_controller.php';
+                    break;
+            }
         } else {
             http_response_code(403);
             echo "Acceso denegado. Debes ser administrador para acceder a esta página.";

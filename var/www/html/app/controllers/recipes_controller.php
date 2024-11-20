@@ -7,43 +7,39 @@ $recipes = new Recipes($pdo);
 $allRecipes = $recipes->getAllRecipes();
 $authorRecipe = $recipes->getUserRecipeName();
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $recipeType = $_POST['recipe_type'];
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $instructions = $_POST['instructions'];
-    $ingredient = $_POST['ingredients']; 
-    $quantity = $_POST['quantities'];   
-    $unit = $_POST['units'];
-    $new_ingredient = $_POST['new_ingredient'];
-    $difficulty = $_POST['difficulty'];
+    
+    $fileExtension = '';
     $imagePath = '';
+    if (isset($_FILES['recipe_image']) && $_FILES['recipe_image']['error'] === UPLOAD_ERR_OK) {
+        $fileExtension = strtolower(pathinfo($_FILES['recipe_image']['name'], PATHINFO_EXTENSION));
 
-    if (isset($_FILES['recipe_image']) && $_FILES['recipe_image']['error'] === 0) {
-        $uploadDir = __DIR__.'/../../assets/img/recipes/'; 
-        $imageName = basename($_FILES['recipe_image']['name']); // Obtén el nombre del archivo
+        $uploadDir = __DIR__ . '/../../assets/img/recipes/';
+        $timestamp = date('Y-m-d_H-i-s');
+        $originalFileName = pathinfo($_FILES['recipe_image']['name'], PATHINFO_FILENAME);
+        $imageName = $originalFileName . '_' . $timestamp . '.' . $fileExtension;
         $imagePath = $uploadDir . $imageName;
 
-        // Mueve el archivo a la carpeta de destino
         if (move_uploaded_file($_FILES['recipe_image']['tmp_name'], $imagePath)) {
-            $imagePath = $imageName; // Guarda el nombre del archivo para almacenar en la base de datos
+            $imagePath = $imageName;
         } else {
             echo "Error al subir la imagen.";
             exit;
         }
     }
 
-    $recipeId = $recipes->createRecipe(
-        $recipeType,
-        $title,
-        $description,
-        $instructions,
-        $difficulty,
-        $ingredient,
-        $quantity,
-        $unit,
-        $new_ingredient,
+    $ingredients = isset($_POST['ingredients']) ? json_decode($_POST['ingredients'], true) : [];
+    if (!is_array($ingredients)) {
+        $ingredients = [];
+    }
+
+    $recipes->createRecipe(
+        $_POST['recipe_type'],
+        $_POST['title'],
+        $_POST['description'],
+        $_POST['instructions'],
+        $_POST['difficulty'],
+        $ingredients,
         $imagePath
     );
 }

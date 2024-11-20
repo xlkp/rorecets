@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../controllers/recipes_controller.php';
 $recipes = new Recipes($pdo);
 $userRecipes = $recipes->getUserRecipes();
 $allIngredients = $recipes->getAllIngredients();
+$allIngredientsJson = json_encode($allIngredients);
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +16,14 @@ $allIngredients = $recipes->getAllIngredients();
     <title>mis recetas</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
+<style>
+    .scrollable {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+</style>
 
 <body class="bg-white">
     <header class="absolute inset-x-0 top-0 z-50">
@@ -73,7 +82,7 @@ $allIngredients = $recipes->getAllIngredients();
                         </ol>
                     </div>
                 </div>
-                <form id="recipeForm" action="/validarReceta" method="POST" enctype="multipart/form-data">
+                <form id="recipeForm" action="/validarReceta" method="POST" enctype="multipart/form-data" class=" m-9">
                     <div id="step1" class="step-content">
                         <h1 class="text-2xl font-bold sm:text-3xl text-center">👩‍🍳 Crea tu propia receta! 👨‍🍳</h1>
                         <p class="text-center mt-4 text-gray-500">Deleita a los demás usuarios con tus dotes culinarias. 😋🍜</p>
@@ -96,31 +105,12 @@ $allIngredients = $recipes->getAllIngredients();
                     <div id="step2" class="step-content hidden">
                         <h2 class="text-center text-2xl font-bold sm:text-3xl">Ingredientes</h2>
                         <p class="text-center mt-4 text-gray-500">Añade los ingredientes necesarios para tu receta.</p>
-
-                        <div id="ingredientFields" class="mt-4 space-y-4">
-                            <?php foreach ($allIngredients as $ingredient): ?>
-                                <div class="flex items-center ingredient-row">
-                                    <select name="ingredients[]" class="border-gray-200 rounded-md w-full py-2 px-3" required>
-                                        <option value="">Selecciona un ingrediente</option>
-                                        <option value="<?= $ingredient['id_ingredient'] ?>"><?= $ingredient['name'] ?></option>
-                                    </select>
-                                    <input type="number" name="quantities[]" class="ml-4 w-20 p-2 border rounded" placeholder="Cantidad" required />
-                                    <select name="units[]" class="ml-4 border-gray-200 rounded-md w-32 py-2 px-3" required>
-                                        <option value="1">Gramos</option>
-                                        <option value="2">Kilogramos</option>
-                                        <option value="3">Mililitros</option>
-                                        <option value="4">Litros</option>
-                                        <option value="5">Cucharadas</option>
-                                        <option value="6">Cucharaditas</option>
-                                        <option value="7">Tazas</option>
-                                    </select>
-                                </div>
-                            <?php endforeach; ?>
+                        <div class="flex gap-2 mt-4">
+                            <input type="text" id="newIngredient" class="border-gray-200 rounded-md flex-grow py-2 px-3" placeholder="Escribe un ingrediente y su cantidad..." />
+                            <button type="button" onclick="addIngredient()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Agregar</button>
                         </div>
-                        <div class="mt-4">
-                            <label for="new_ingredient" class="block text-gray-700">Ingrediente personalizado</label>
-                            <input type="text" name="new_ingredient" id="new_ingredient" placeholder="Ingrediente personalizado" class="border-gray-200 rounded-md w-full py-2 px-3" />
-                        </div>
+                        <div id="ingredientFields" class="mt-4 space-y-4 scrollable"></div>
+                        <input type="hidden" name="ingredients" id="ingredientsList" value="[]">
                     </div>
                     <div id="step3" class="step-content hidden">
                         <h2 class="text-center text-2xl font-bold sm:text-3xl">Instrucciones</h2>
@@ -133,15 +123,15 @@ $allIngredients = $recipes->getAllIngredients();
                         <label for="difficulty" class="block mt-4 text-gray-700">Nivel de dificultad</label>
                         <select name="difficulty" id="difficulty" class="border-gray-200 rounded-md w-full py-2 px-3" required>
                             <option value="">Selecciona la dificultad</option>
-                            <option value="1">Fácil</option>
-                            <option value="2">Media</option>
-                            <option value="3">Difícil</option>
+                            <option value="1">Fácil - ⭐</option>
+                            <option value="2">Media - ⭐⭐</option>
+                            <option value="3">Difícil - ⭐⭐⭐</option>
                         </select>
                     </div>
                     <div class="flex justify-between mt-8">
-                        <button type="button" id="prevButton" class="inline-block bg-gray-300 px-5 py-3 text-sm font-medium text-gray-700 hidden">Anterior</button>
-                        <button type="button" id="nextButton" class="inline-block bg-blue-500 px-5 py-3 text-sm font-medium text-white">Siguiente</button>
-                        <button type="submit" id="submitButton" class="inline-block bg-green-500 px-5 py-3 text-sm font-medium text-white hidden">Enviar</button>
+                        <button type="button" id="prevButton" class="inline-block rounded-full bg-gray-300 px-5 py-3 text-sm font-medium text-gray-700 hidden">Anterior</button>
+                        <button type="button" id="nextButton" class="inline-block rounded-full bg-blue-500 px-5 py-3 text-sm font-medium text-white">Siguiente</button>
+                        <button type="submit" id="submitButton" class="inline-block rounded-full bg-green-500 px-5 py-3 text-sm font-medium text-white hidden">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -150,11 +140,12 @@ $allIngredients = $recipes->getAllIngredients();
             echo '<h1 class="text-center text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl mt-4">No has creado ninguna receta aún😥</h1>';
         } ?>
         <!-- MIS RECETAS -->
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8 m-4">
+        <div class=" grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8 m-4">
             <?php
             $i = 0;
             foreach ($userRecipes as $recipe) {
-                $colSpanClass = ($i % 2 == 0) ? '' : 'lg:col-span-2';
+                // se aplica el col-span-2 cada 2 elementos evitando el primero para así darle una forma más maja a la web
+                $colSpanClass = ($i % 5 === 0 || $i % 5 === 3 || $i % 5 === 4) ? '' : 'lg:col-span-2';
             ?>
                 <div class="min-h-32 <?= $colSpanClass ?>">
                     <a href="#" class="block">
@@ -188,6 +179,111 @@ $allIngredients = $recipes->getAllIngredients();
 
 </html>
 <script>
+    const allIngredients = <?php echo $allIngredientsJson; ?>;
+
+    let selectedIngredients = [];
+
+    function searchIngredients() {
+        const searchQuery = document.getElementById('ingredientSearch').value.toLowerCase();
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+
+        if (searchQuery === '') return;
+
+        const filteredIngredients = allIngredients.filter(ingredient =>
+            ingredient.name.toLowerCase().includes(searchQuery)
+        );
+
+        filteredIngredients.forEach(ingredient => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('py-2', 'px-3', 'cursor-pointer', 'border-b', 'border-gray-200');
+            resultItem.textContent = ingredient.name;
+            resultItem.onclick = () => addIngredientToList(ingredient);
+            searchResults.appendChild(resultItem);
+        });
+    }
+
+    function addIngredientToList(ingredient) {
+        if (selectedIngredients.includes(ingredient.name)) {
+            alert('Este ingrediente ya está en la lista.');
+            return;
+        }
+        selectedIngredients.push(ingredient.name);
+
+        const ingredientRow = document.createElement('div');
+        ingredientRow.classList.add('flex', 'items-center', 'ingredient-row', 'space-x-4', 'py-2', 'px-3', 'border', 'border-gray-200', 'rounded-md');
+
+        const ingredientName = document.createElement('span');
+        ingredientName.textContent = ingredient.name;
+
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.name = 'quantities[]';
+        quantityInput.placeholder = 'Cantidad';
+        quantityInput.classList.add('w-20', 'p-2', 'border', 'rounded');
+
+        const unitSelect = document.createElement('select');
+        unitSelect.name = 'units[]';
+        unitSelect.classList.add('border-gray-200', 'rounded-md', 'py-2', 'px-3');
+        const units = ['Gramos', 'Kilogramos', 'Mililitros', 'Litros', 'Cucharadas', 'Cucharaditas', 'Tazas'];
+        units.forEach((unit, index) => {
+            const option = document.createElement('option');
+            option.value = index + 1;
+            option.textContent = unit;
+            unitSelect.appendChild(option);
+        });
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Borrar';
+        removeButton.classList.add('p-2', 'bg-red-500', 'text-white', 'rounded');
+        removeButton.onclick = () => removeIngredient(ingredientRow, ingredient);
+
+        ingredientRow.appendChild(ingredientName);
+        ingredientRow.appendChild(quantityInput);
+        ingredientRow.appendChild(unitSelect);
+        ingredientRow.appendChild(removeButton);
+
+        document.getElementById('ingredientFields').appendChild(ingredientRow);
+
+        document.getElementById('searchResults').innerHTML = '';
+        document.getElementById('ingredientSearch').value = '';
+    }
+
+    function removeIngredient(ingredientRow, ingredient) {
+        selectedIngredients = selectedIngredients.filter(i => i !== ingredient.name);
+        ingredientRow.remove();
+    }
+
+    function submitRecipe() {
+        const ingredients = selectedIngredients;
+
+        const formData = new FormData();
+        formData.append('recipe_type', recipeType);
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('instructions', instructions);
+        formData.append('difficulty', difficulty);
+        formData.append('new_ingredient', newIngredient);
+        formData.append('ingredients', JSON.stringify(ingredients));
+
+        if (recipeImage) {
+            formData.append('recipe_image', recipeImage);
+        }
+
+        fetch('/validarReceta', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const modalReceta = document.getElementById('modalReceta');
         const openModalButton = document.getElementById('openModalButton');
@@ -203,6 +299,12 @@ $allIngredients = $recipes->getAllIngredients();
             modalReceta.classList.remove('hidden');
             currentStep = 0;
             updateStep();
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modalReceta) {
+                modalReceta.classList.add('hidden');
+            }
         });
 
         function updateStep() {
@@ -227,27 +329,73 @@ $allIngredients = $recipes->getAllIngredients();
 
         nextButton.addEventListener('click', () => {
             if (currentStep < steps.length - 1) {
+                const currentStepFields = steps[currentStep].querySelectorAll('[required]');
+                for (const field of currentStepFields) {
+                    if (!field.checkValidity()) {
+                        field.reportValidity();
+                        return;
+                    }
+                }
                 currentStep++;
             } else {
                 const form = document.querySelector('form');
-                if (form) form.submit();
-
+                if (form) form.requestSubmit();
                 modalReceta.classList.add('hidden');
                 currentStep = 0;
             }
             updateStep();
-        });
-        prevButton.addEventListener('click', () => {
-            if (currentStep > 0) {
-                currentStep--;
-            }
+            prevButton.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                }
+                updateStep();
+            });
+            window.addEventListener('click', function(event) {
+                if (event.target === modalReceta) {
+                    modalReceta.classList.add('hidden');
+                }
+            });
             updateStep();
         });
-        window.addEventListener('click', function(event) {
-            if (event.target === modalReceta) {
-                modalReceta.classList.add('hidden');
-            }
-        });
-        updateStep();
     });
+
+    let ingredientsList = [];
+
+    function addIngredient() {
+        const input = document.getElementById('newIngredient');
+        const ingredient = input.value.trim();
+        
+        if (ingredient) {
+            ingredientsList.push(ingredient);
+            updateIngredientFields();
+            input.value = '';
+            document.getElementById('ingredientsList').value = JSON.stringify(ingredientsList);
+        }
+    }
+
+    function removeIngredient(index) {
+        ingredientsList.splice(index, 1);
+        updateIngredientFields();
+        document.getElementById('ingredientsList').value = JSON.stringify(ingredientsList);
+    }
+
+    function updateIngredientFields() {
+        const container = document.getElementById('ingredientFields');
+        container.innerHTML = '';
+        
+        ingredientsList.forEach((ingredient, index) => {
+            const ingredientRow = document.createElement('div');
+            ingredientRow.classList.add('flex', 'items-center', 'justify-between', 'p-2', 'border', 'rounded-md');
+            
+            ingredientRow.innerHTML = `
+                <span>${ingredient}</span>
+                <button type="button" onclick="removeIngredient(${index})" 
+                        class="px-2 py-1 bg-red-500 text-white rounded-md">
+                    Eliminar
+                </button>
+            `;
+            
+            container.appendChild(ingredientRow);
+        });
+    }
 </script>

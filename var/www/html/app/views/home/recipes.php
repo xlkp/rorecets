@@ -7,6 +7,9 @@ require_once __DIR__ . '/../../controllers/recipes_controller.php';
 $recipes = new Recipes($pdo);
 $allRecipes = $recipes->getAllRecipes();
 
+if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
+    $menuAdmin = true;
+}
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +32,12 @@ $allRecipes = $recipes->getAllRecipes();
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">inicio</a>
                     <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo ($_SESSION['username']) ?></a>
-                    <a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis recetas</a>
+                    <?php if (isset($menuAdmin)) {
+                        echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis recetas</a>';
+                    } else {
+                        echo '<a href="/followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis seguidores</a>';
+                    }?>
+
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
@@ -50,8 +58,13 @@ $allRecipes = $recipes->getAllRecipes();
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">inicio</a>
                                 <a href="profile"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"><?php echo ($_SESSION['username']) ?></a>
-                                <a href="followers"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis recetas</a>
+                                <?php if (isset($menuAdmin)) {
+                                    echo '<a href="recipes/mine"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis recetas</a>';
+                                }else {
+                                    echo '<a href="/followers"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis seguidores</a>';
+                                } ?>
                             </div>
                             <div class="py-6">
                                 <form action="auth" method="post">
@@ -105,12 +118,12 @@ $allRecipes = $recipes->getAllRecipes();
                         </div>
 
                         <div class="hidden sm:flex sm:gap-4">
-                            <!-- Ingredientes falta poner una lista con todos los ingredientes disponibles-->
+                            <!-- Valoraciones-->
                             <div class="relative">
                                 <details class="group [&_summary::-webkit-details-marker]:hidden">
                                     <summary
                                         class="flex cursor-pointer items-center gap-2 border-b border-gray-400 pb-1 text-gray-900 transition hover:border-gray-600">
-                                        <span class="text-sm font-medium"> Ingredientes </span>
+                                        <span class="text-sm font-medium"> Valoración </span>
 
                                         <span class="transition group-open:-rotate-180">
                                             <svg
@@ -131,37 +144,41 @@ $allRecipes = $recipes->getAllRecipes();
                                     <div
                                         class="z-50 group-open:absolute group-open:top-auto group-open:mt-2 ltr:group-open:start-0">
                                         <div class="w-96 rounded border border-gray-200 bg-white">
+
                                             <ul class="space-y-1 border-t border-gray-200 p-4">
                                                 <li>
-                                                    <label for="FilterInStock" class="inline-flex items-center gap-2">
+                                                    <label for="easy" class="inline-flex items-center gap-2">
                                                         <input
                                                             type="checkbox"
-                                                            id="FilterInStock"
+                                                            id="easy"
+                                                            name="easy"
                                                             class="size-5 rounded border-gray-300" />
 
-                                                        <span class="text-sm font-medium text-gray-700"> In Stock (5+) </span>
+                                                        <span class="text-sm font-medium text-gray-700"> ⭐ </span>
                                                     </label>
                                                 </li>
 
                                                 <li>
-                                                    <label for="FilterPreOrder" class="inline-flex items-center gap-2">
+                                                    <label for="medium" class="inline-flex items-center gap-2">
                                                         <input
                                                             type="checkbox"
-                                                            id="FilterPreOrder"
+                                                            id="medium"
+                                                            name="medium"
                                                             class="size-5 rounded border-gray-300" />
 
-                                                        <span class="text-sm font-medium text-gray-700"> Pre Order (3+) </span>
+                                                        <span class="text-sm font-medium text-gray-700"> ⭐⭐ </span>
                                                     </label>
                                                 </li>
 
                                                 <li>
-                                                    <label for="FilterOutOfStock" class="inline-flex items-center gap-2">
+                                                    <label for="hard" class="inline-flex items-center gap-2">
                                                         <input
                                                             type="checkbox"
-                                                            id="FilterOutOfStock"
+                                                            id="hard"
+                                                            name="hard"
                                                             class="size-5 rounded border-gray-300" />
 
-                                                        <span class="text-sm font-medium text-gray-700"> Out of Stock (10+) </span>
+                                                        <span class="text-sm font-medium text-gray-700"> ⭐⭐⭐</span>
                                                     </label>
                                                 </li>
                                             </ul>
@@ -169,7 +186,6 @@ $allRecipes = $recipes->getAllRecipes();
                                     </div>
                                 </details>
                             </div>
-
                             <!-- Dificultad -->
                             <div class="relative">
                                 <details class="group [&_summary::-webkit-details-marker]:hidden">

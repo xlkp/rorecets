@@ -24,7 +24,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                     <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo ($_SESSION['username']) ?></a>
                     <a href="followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis seguidores</a>
                     <?php if (isset($menuAdmin)) {
-                        echo '<a href="#" class="text-sm/6 font-semibold text-green-800 hover:text-lg">' . $menuAdmin . '</a>';
+                        echo '<a href="admin" class="text-sm/6 font-semibold text-green-800 hover:text-lg">' . $menuAdmin . '</a>';
                     } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -90,8 +90,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="recipes" class="text-sm/6 font-semibold text-gray-900">Moderar recetas<span
                                 aria-hidden="true">→</span></a>';
-                        } else echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-900">Mis recetas<span
-                                aria-hidden="true">→</span></a>'; ?>
+                        }?>
                     </div>
                 </div>
             </div>
