@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileExtension = strtolower(pathinfo($_FILES['recipe_image']['name'], PATHINFO_EXTENSION));
 
         $uploadDir = __DIR__ . '/../../assets/img/recipes/';
-        $timestamp = date('Y-m-d_H-i-s');
+        $timestamp = date('YmdHis');
         $originalFileName = pathinfo($_FILES['recipe_image']['name'], PATHINFO_FILENAME);
         $imageName = $originalFileName . '_' . $timestamp . '.' . $fileExtension;
         $imagePath = $uploadDir . $imageName;
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $ingredients = isset($_POST['ingredients']) ? json_decode($_POST['ingredients'], true) : [];
+    $ingredients = isset($_POST['ingredients']);
     if (!is_array($ingredients)) {
         $ingredients = [];
     }

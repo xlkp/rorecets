@@ -27,15 +27,16 @@ switch ($request) {
     case '/recipes':
     case '/profile':
     case '/followers':
+    case '/recipes/view':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
         session_start();
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
                 case '/recipes':
-                    require __DIR__ . '/app/views/home/recipes.php';
+                    require __DIR__ . '/app/views/home/recipes/recipes.php';
                     break;
-                case '/recipes/mine':
-                    require __DIR__ . '/app/views/home/my_recipes.php';
+                case '/recipes/view':
+                    require __DIR__ . '/app/views/home/recipes/view_recipe.php';
                     break;
                 case '/profile':
                     require __DIR__ . '/app/views/layouts/user.php';
@@ -56,6 +57,7 @@ switch ($request) {
     case '/admin':
     case '/recipes/mine':
     case '/validarReceta':
+    case '/recipes/edit':
         session_start();
         if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
             switch ($request) {
@@ -63,10 +65,13 @@ switch ($request) {
                     require __DIR__ . '/app/views/layouts/admin.php';
                     break;
                 case '/recipes/mine':
-                    require __DIR__ . '/app/views/home/my_recipes.php';
+                    require __DIR__ . '/app/views/home/recipes/admin_recipes.php';
                     break;
                 case '/validarReceta':
                     require __DIR__ . '/app/controllers/recipes_controller.php';
+                    break;
+                case '/recipes/edit':
+                    require __DIR__ . '/app/views/home/recipes/edit_recipe.php';
                     break;
             }
         } else {

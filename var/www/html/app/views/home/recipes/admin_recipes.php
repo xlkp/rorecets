@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../controllers/recipes_controller.php';
+require_once __DIR__ . '/../../../controllers/recipes_controller.php';
 
 $recipes = new Recipes($pdo);
 $userRecipes = $recipes->getUserRecipes();
@@ -143,11 +143,13 @@ $allIngredientsJson = json_encode($allIngredients);
         <div class=" grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8 m-4">
             <?php
             $i = 0;
+            
             foreach ($userRecipes as $recipe) {
+                $_SESSION['id_recipe'] = $recipe['id_recipe'];
                 // se aplica el col-span-2 cada 2 elementos evitando el primero para así darle una forma más maja a la web
                 $colSpanClass = ($i % 5 === 0 || $i % 5 === 3 || $i % 5 === 4) ? '' : 'lg:col-span-2';
             ?>
-                <div class="min-h-32 <?= $colSpanClass ?>">
+                <div class="min-h-32 <?= $colSpanClass ?>" onclick="window.location.href='/recipes/edit'">
                     <a href="#" class="block">
                         <img
                             alt=""
@@ -364,7 +366,7 @@ $allIngredientsJson = json_encode($allIngredients);
     function addIngredient() {
         const input = document.getElementById('newIngredient');
         const ingredient = input.value.trim();
-        
+
         if (ingredient) {
             ingredientsList.push(ingredient);
             updateIngredientFields();
@@ -382,11 +384,11 @@ $allIngredientsJson = json_encode($allIngredients);
     function updateIngredientFields() {
         const container = document.getElementById('ingredientFields');
         container.innerHTML = '';
-        
+
         ingredientsList.forEach((ingredient, index) => {
             const ingredientRow = document.createElement('div');
             ingredientRow.classList.add('flex', 'items-center', 'justify-between', 'p-2', 'border', 'rounded-md');
-            
+
             ingredientRow.innerHTML = `
                 <span>${ingredient}</span>
                 <button type="button" onclick="removeIngredient(${index})" 
@@ -394,7 +396,7 @@ $allIngredientsJson = json_encode($allIngredients);
                     Eliminar
                 </button>
             `;
-            
+
             container.appendChild(ingredientRow);
         });
     }

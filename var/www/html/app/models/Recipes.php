@@ -40,7 +40,7 @@ class Recipes
 
     public function getRecipeById($id)
     {
-        $query = "SELECT * FROM recipes WHERE id = " . $id;
+        $query = "SELECT * FROM recipes WHERE id_recipe = " . $id;
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -127,4 +127,84 @@ class Recipes
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getIngredientsByRecipeId($recipe_id)
+    {
+        $query = "SELECT ingredients.name FROM ingredients 
+              JOIN recipes_ingredients ON ingredients.id_ingredient = recipes_ingredients.id_ingredient 
+              WHERE recipes_ingredients.id_recipe = :id_recipe";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id_recipe', $recipe_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateRecipe($id, $recipe_type, $title, $description, $instructions, $difficulty, $ingredients, $image_recipe = null)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $query = "UPDATE recipes SET 
+                  recipe_type = :type, 
+                  title = :title, 
+                  description = :description, 
+                  instructions = :instructions, 
+                  difficulty = :difficulty ,
+                  image_recipe = :image_recipe
+                  WHERE id_recipe = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':type', $recipe_type);
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':instructions', $instructions);
+            $stmt->bindParam(':difficulty', $difficulty);
+            $stmt->bindParam(':image_recipe', $image_recipe);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            // Actualizar ingredientes
+            // Primero eliminar los existentes
+            $query = "DELETE FROM recipes_ingredients WHERE id_recipe = :id_recipe";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':id_recipe', $id);
+            $stmt->execute();
+
+            foreach (json_decode($ingredients, true) as $ingredient) {
+                $query = "INSERT INTO ingredients (name) 
+                      SELECT :name WHERE NOT EXISTS (
+                          SELECT 1 FROM ingredients WHERE name = :name
+                      )";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindParam(':name', $ingredient);
+                $stmt->execute();
+
+                $query = "SELECT id_ingredient FROM ingredients WHERE name = :name";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindParam(':name', $ingredient);
+                $stmt->execute();
+                $ingredient_id = $stmt->fetchColumn();
+
+                $query = "INSERT INTO recipes_ingredients (id_recipe, id_ingredient) 
+                      VALUES (:id_recipe, :id_ingredient)";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindParam(':id_recipe', $id);
+                $stmt->bindParam(':id_ingredient', $ingredient_id);
+                $stmt->execute();
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    public function deleteRecipe($id)
+    {
+        $query = "DELETE FROM recipes WHERE id_recipe = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    }
+
 }

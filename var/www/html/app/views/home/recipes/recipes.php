@@ -1,11 +1,28 @@
 <?php
-require_once __DIR__ . '/../../controllers/recipes_controller.php';
-// meter lógica con los get o post para obtener todas las recetas o crear una:
-// todas, las 10 mejor valoradas, las mías, las de mis seguidores, random(opcional, no me quiero complicar tanto)
-// opcional: buscador de recetas según nombre, autor, ingredientes, etc. (lo mismo que la random, pal final si me da tiempo)
+require_once __DIR__ . '/../../../controllers/recipes_controller.php';
 
 $recipes = new Recipes($pdo);
 $allRecipes = $recipes->getAllRecipes();
+
+$recetasPorPagina = 4;
+$totalRecetas = count($allRecipes);
+// redondeo hacia arriba para obtener el total de páginas
+$totalPaginas = ceil($totalRecetas / $recetasPorPagina);
+
+if (isset($_POST['pagina'])) {
+    $_SESSION['paginaActual'] = (int)$_POST['pagina'];
+}
+
+$paginaActual = isset($_SESSION['paginaActual']) ? $_SESSION['paginaActual'] : 1;
+
+if ($paginaActual < 1) {
+    $paginaActual = 1;
+} elseif ($paginaActual > $totalPaginas) {
+    $paginaActual = $totalPaginas;
+}
+
+$offset = ($paginaActual - 1) * $recetasPorPagina;
+$recetasPagina = array_slice($allRecipes, $offset, $recetasPorPagina);
 
 if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
     $menuAdmin = true;
@@ -36,7 +53,7 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                         echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis recetas</a>';
                     } else {
                         echo '<a href="/followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis seguidores</a>';
-                    }?>
+                    } ?>
 
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -61,7 +78,7 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                                 <?php if (isset($menuAdmin)) {
                                     echo '<a href="recipes/mine"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis recetas</a>';
-                                }else {
+                                } else {
                                     echo '<a href="/followers"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis seguidores</a>';
                                 } ?>
@@ -256,11 +273,13 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                             </div>
                         </div>
                     </div>
-                    <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 contenedor-recetas">
                         <!-- siempre las mas recientes se ponen las primeras -->
-                        <?php foreach ($allRecipes as $recipe) { ?>
+                        <?php foreach ($recetasPagina as $recipe) {
+                            $_SESSION['id_recipe'] = $recipe['id_recipe'];
+                        ?>
                             <li>
-                                <a href="#" class="group block overflow-hidden">
+                                <a class="group block overflow-hidden" href="<?php echo isset($menuAdmin) ? '/recipes/edit' : '/recipes/view'; ?>">
                                     <img
                                         src=<?php echo "../../../assets/img/recipes/" . "{$recipe['image_recipe']}"; ?>
                                         alt=""
@@ -288,63 +307,50 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                             </li>
                         <?php } ?>
                     </ul>
-                    <!-- paginación -->
                     <ol class="mt-8 flex justify-center gap-1 text-xs font-medium">
-                        <li>
-                            <a
-                                href="#"
-                                class="inline-flex size-8 items-center justify-center rounded border border-gray-100">
-                                <span class="sr-only">Prev Page</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="size-3"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </a>
-                        </li>
+                        <!-- Botón de página anterior -->
+                        <?php if ($paginaActual > 1): ?>
+                            <li>
+                                <form method="post" action="">
+                                    <input type="hidden" name="pagina" value="<?php echo $paginaActual - 1; ?>">
+                                    <button type="submit" class="inline-flex size-8 items-center justify-center rounded border border-gray-100">
+                                        <span class="sr-only">Página Anterior</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                    </svg>
+                                    </button>
+                                </form>
+                            </li>
+                        <?php endif; ?>
 
-                        <li>
-                            <a href="#" class="block size-8 rounded border border-gray-100 text-center leading-8">
-                                1
-                            </a>
-                        </li>
+                        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                            <li>
+                                <?php if ($i == $paginaActual): ?>
+                                    <span class="block size-8 rounded border-black bg-black text-center leading-8 text-white"><?php echo $i; ?></span>
+                                <?php else: ?>
+                                    <form method="post" action="">
+                                        <input type="hidden" name="pagina" value="<?php echo $i; ?>">
+                                        <button type="submit" class="block size-8 rounded border border-gray-100 text-center leading-8">
+                                            <?php echo $i; ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </li>
+                        <?php endfor; ?>
 
-                        <li class="block size-8 rounded border-black bg-black text-center leading-8 text-white">2</li>
-
-                        <li>
-                            <a href="#" class="block size-8 rounded border border-gray-100 text-center leading-8">
-                                3
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="block size-8 rounded border border-gray-100 text-center leading-8">
-                                4
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                href="#"
-                                class="inline-flex size-8 items-center justify-center rounded border border-gray-100">
-                                <span class="sr-only">Next Page</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="size-3"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </a>
-                        </li>
+                        <?php if ($paginaActual < $totalPaginas): ?>
+                            <li>
+                                <form method="post" action="">
+                                    <input type="hidden" name="pagina" value="<?php echo $paginaActual + 1; ?>">
+                                    <button type="submit" class="inline-flex size-8 items-center justify-center rounded border border-gray-100">
+                                        <span class="sr-only">Página Siguiente</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                    </button>
+                                </form>
+                            </li>
+                        <?php endif; ?>
                     </ol>
                 </div>
             </section>
@@ -357,7 +363,6 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
             </div>
         </div>
     </div>
-
 </body>
 
 </html>
