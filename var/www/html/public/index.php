@@ -20,9 +20,8 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">recetas</a>
-                    <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo ($_SESSION['username']) ?></a>
-                    <a href="followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">mis seguidores</a>
+                    <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
+                    <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                     <?php if (isset($menuAdmin)) {
                         echo '<a href="admin" class="text-sm/6 font-semibold text-green-800 hover:text-lg">' . $menuAdmin . '</a>';
                     } ?>
@@ -45,7 +44,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                                 <a href="recipes"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">recetas</a>
                                 <a href="profile"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"><?php echo ($_SESSION['username']) ?></a>
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"><?php echo strtoupper($_SESSION['username']) ?></a>
                                 <a href="followers"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis seguidores</a>
                                 <?php if (isset($menuAdmin)) {
@@ -76,11 +75,11 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                     <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
                         <?php if (isset($menuAdmin)) {
                             echo 'Bienvenido administrador';
-                        } else echo 'Que te apetece hoy?'; ?></h1>
+                        } else echo 'Bienvenido, ' . $_SESSION['username']. '!🙉'; ?></h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                         <?php if (isset($menuAdmin)) {
-                            echo 'Modera este foro y procura ayudar a la gente con lo que necesite 😊👍';
-                        } else echo 'Prepara la cocina, porque hoy cae algo rico rico!! 🍽️🍳'; ?></p>
+                            echo 'Procura ayudar a la gente con lo que necesite 😊👍';  
+                        } else echo 'A ver que se te antoja hoy!! 🍽️🍳'; ?></p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="admin"

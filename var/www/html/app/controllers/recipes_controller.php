@@ -5,10 +5,8 @@ require_once __DIR__ . '/../models/Recipes.php';
 $recipes = new Recipes($pdo);
 
 $allRecipes = $recipes->getAllRecipes();
-$authorRecipe = $recipes->getUserRecipeName();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
     $fileExtension = '';
     $imagePath = '';
     if (isset($_FILES['recipe_image']) && $_FILES['recipe_image']['error'] === UPLOAD_ERR_OK) {
@@ -28,9 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $ingredients = isset($_POST['ingredients']);
-    if (!is_array($ingredients)) {
-        $ingredients = [];
+    $ingredients = [];
+    if (isset($_POST['ingredients'])) {
+        $ingredients_json = $_POST['ingredients'];
+        $ingredients = json_decode($ingredients_json, true);
+        if (!is_array($ingredients)) {
+            $ingredients = [];
+        }
     }
 
     $recipes->createRecipe(
@@ -42,4 +44,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ingredients,
         $imagePath
     );
+    header('Location: /recipes');
 }

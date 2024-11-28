@@ -102,7 +102,6 @@ class Recipes
 
             $this->pdo->commit();
             return true;
-
         } catch (Exception $e) {
             $this->pdo->rollBack();
             throw $e;
@@ -118,14 +117,25 @@ class Recipes
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getUserRecipeName()
+    public function getUserRecipeName($id_recipe)
     {
-        $id_user = $this->getUser('id_user');
-        $query = "SELECT users.username FROM recipes JOIN users ON recipes.id_user = users.id_user WHERE recipes.id_user = :id_user";
+        // Obtener el id_user de la receta
+        $query = "SELECT id_user FROM recipes WHERE id_recipe = :id_recipe";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id_recipe', $id_recipe);
+        $stmt->execute();
+        $id_user = $stmt->fetchColumn();
+
+        if (!$id_user) {
+            return null;
+        }
+        $query = "SELECT username FROM users WHERE id_user = :id_user";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id_user', $id_user);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['username'] ?? null;
     }
 
     public function getIngredientsByRecipeId($recipe_id)
@@ -199,12 +209,72 @@ class Recipes
         }
     }
 
+
     public function deleteRecipe($id)
     {
+        $query = "SELECT image_name FROM recipes WHERE id_recipe = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $imageName = $stmt->fetchColumn();
+
         $query = "DELETE FROM recipes WHERE id_recipe = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
+
+        if ($imageName && file_exists(__DIR__ . '/../../assets/img/recipes/' . $imageName)) {
+            unlink(__DIR__ . '/../../assets/img/recipes/' . $imageName);
+        }
     }
 
+    public function getCommentsByRecipeId($id_recipe)
+    {
+        $stmt = $this->pdo->prepare('SELECT comments.*, users.username FROM comments JOIN users ON comments.id_user = users.id_user WHERE id_recipe = ? ORDER BY comment_date DESC');
+        $stmt->execute([$id_recipe]);
+        return $stmt->fetchAll();
+    }
+
+    public function addComment($id_recipe, $description, $id_response_comment = null)
+    {
+        $id_user = $this->getUser('id_user');
+        $stmt = $this->pdo->prepare('INSERT INTO comments (id_user, id_recipe, description) VALUES (:id_user, :id_recipe, :description)');
+        $stmt->bindParam(':id_user', $id_user);
+        $stmt->bindParam(':id_recipe', $id_recipe);
+        $stmt->bindParam(':description', $description);
+        $stmt->execute();
+    }
+
+    public function deleteComment($id_comment)
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM comments WHERE id_comment = ?');
+        $stmt->execute([$id_comment]);
+    }
+
+    public function addRating($id_recipe, $score)
+    {
+        $id_user = $this->getUser('id_user');
+        $stmt = $this->pdo->prepare('INSERT INTO ratings (id_user, id_recipe, score) VALUES (:id_user, :id_recipe, :score) ON DUPLICATE KEY UPDATE score = VALUES(score)');
+        $stmt->execute([':id_user' => $id_user, ':id_recipe' => $id_recipe, ':score' => $score]);
+    }
+    public function deleteRating($id_recipe)
+    {
+        $id_user = $this->getUser('id_user');
+        $stmt = $this->pdo->prepare('DELETE FROM ratings WHERE id_user = :id_user AND id_recipe = :id_recipe');
+        $stmt->execute([':id_user' => $id_user, ':id_recipe' => $id_recipe]);
+    }
+
+    public function getRating($id_user ,$id_recipe)
+    {
+        $stmt = $this->pdo->prepare('SELECT score FROM ratings WHERE id_user = :id_user AND id_recipe = :id_recipe');
+        $stmt->execute([':id_user' => $id_user, ':id_recipe' => $id_recipe]);
+        return $stmt->fetchColumn();
+    }
+    public function getAverageRating($id_recipe)
+    {
+        $stmt = $this->pdo->prepare('SELECT AVG(score) as average_rating FROM ratings WHERE id_recipe = :id_recipe');
+        $stmt->bindParam(':id_recipe', $id_recipe);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
 }

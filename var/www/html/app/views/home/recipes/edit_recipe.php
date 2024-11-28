@@ -4,7 +4,9 @@ require_once __DIR__ . '/../../../../config/config.php';
 
 $recipes = new Recipes($pdo);
 
-$id_recipe = $_SESSION['id_recipe'];
+if (isset($_GET['id_recipe'])) {
+    $id_recipe = intval($_GET['id_recipe']);
+}
 $recipe = $recipes->getRecipeById($id_recipe);
 
 if (!$recipe) {
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     // Redirect after update
-    header("Location: /recipes/edit");
+    header("Location: /recipes/edit?id_recipe=$id_recipe");
     exit;
 }
 
@@ -77,9 +79,9 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1"></div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm font-semibold text-gray-800 hover:text-lg">inicio</a>
-                <a href="/profile" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo $_SESSION['username']; ?></a>
-                <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">otras recetas</a>
+                <a href="/" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIO</a>
+                <a href="/profile" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <form action="/auth" method="post">
@@ -104,7 +106,7 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
         </div>
         <div class="mt-8">
             <h1 class="text-2xl font-bold text-center"><?php echo $recipe['title'] ?></h1>
-            <form id="editRecipeForm" action="/recipes/edit" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto mt-6">
+            <form id="editRecipeForm" action="/recipes/edit?id_recipe=<?php echo $id_recipe?>" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto mt-6">
                 <div class="space-y-4">
                     <label class="block">
                         <span class="text-gray-700">Tipo de receta</span>

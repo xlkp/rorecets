@@ -23,6 +23,39 @@ $allIngredientsJson = json_encode($allIngredients);
         border: 1px solid #ccc;
         padding: 10px;
     }
+
+    .image-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        z-index: 10;
+    }
+
+    #modalReceta {
+        z-index: 50;
+    }
+
+    .image:hover {
+        filter: brightness(50%);
+    }
+
+    .edit-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #3b82f6;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .image-container:hover .edit-button {
+        opacity: 1;
+    }
 </style>
 
 <body class="bg-white">
@@ -30,9 +63,9 @@ $allIngredientsJson = json_encode($allIngredients);
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1"></div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">inicio</a>
-                <a href="/profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo ($_SESSION['username']) ?></a>
-                <a href="/recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">otras recetas</a>
+                <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">INICIO</a>
+                <a href="/profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                <a href="/recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <form action="/auth" method="post">
@@ -123,9 +156,9 @@ $allIngredientsJson = json_encode($allIngredients);
                         <label for="difficulty" class="block mt-4 text-gray-700">Nivel de dificultad</label>
                         <select name="difficulty" id="difficulty" class="border-gray-200 rounded-md w-full py-2 px-3" required>
                             <option value="">Selecciona la dificultad</option>
-                            <option value="1">Fácil - ⭐</option>
-                            <option value="2">Media - ⭐⭐</option>
-                            <option value="3">Difícil - ⭐⭐⭐</option>
+                            <option value="1">🍳 Fácil</option>
+                            <option value="2">🍲 Media</option>
+                            <option value="3">🍖 Difícil</option>
                         </select>
                     </div>
                     <div class="flex justify-between mt-8">
@@ -143,18 +176,19 @@ $allIngredientsJson = json_encode($allIngredients);
         <div class=" grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8 m-4">
             <?php
             $i = 0;
-            
+
             foreach ($userRecipes as $recipe) {
-                $_SESSION['id_recipe'] = $recipe['id_recipe'];
                 // se aplica el col-span-2 cada 2 elementos evitando el primero para así darle una forma más maja a la web
                 $colSpanClass = ($i % 5 === 0 || $i % 5 === 3 || $i % 5 === 4) ? '' : 'lg:col-span-2';
             ?>
-                <div class="min-h-32 <?= $colSpanClass ?>" onclick="window.location.href='/recipes/edit'">
-                    <a href="#" class="block">
-                        <img
-                            alt=""
-                            src=<?php echo "../../../assets/img/recipes/" . "{$recipe['image_recipe']}"; ?>
-                            class="h-56 w-full rounded-bl-3xl rounded-tr-3xl object-cover sm:h-64 lg:h-72" />
+                <div class="min-h-32 <?= $colSpanClass ?>">
+                    <a class="block" href="/recipes/view?id_recipe=<?php echo urlencode($recipe['id_recipe']); ?>">
+                        <div class="image-container">
+                            <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="<?php echo ($recipe['title']); ?>" class="image h-56 w-full rounded-bl-3xl rounded-tr-3xl object-cover sm:h-64 lg:h-72">
+                            <a class="edit-button" href="/recipes/view?id_recipe=<?php echo urlencode($recipe['id_recipe']); ?>">
+                                ✏️ Editar
+                            </a>
+                        </div>
 
                         <div class="mt-4 sm:flex sm:items-center sm:justify-center sm:gap-4">
                             <strong class="font-medium"><?php echo "{$recipe['title']}"; ?></strong>
@@ -182,8 +216,8 @@ $allIngredientsJson = json_encode($allIngredients);
 </html>
 <script>
     const allIngredients = <?php echo $allIngredientsJson; ?>;
-
     let selectedIngredients = [];
+    let ingredientsList = [];
 
     function searchIngredients() {
         const searchQuery = document.getElementById('ingredientSearch').value.toLowerCase();
@@ -360,8 +394,6 @@ $allIngredientsJson = json_encode($allIngredients);
             updateStep();
         });
     });
-
-    let ingredientsList = [];
 
     function addIngredient() {
         const input = document.getElementById('newIngredient');
