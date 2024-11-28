@@ -1,5 +1,5 @@
 <?php
-$request = $_SERVER['REQUEST_URI'];
+$request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 switch ($request) {
     case '':
     case '/':
@@ -22,22 +22,23 @@ switch ($request) {
     case '/change_password':
         require __DIR__ . '/app/views/auth/change_password.html';
         break;
-
-        //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
+        
     case '/recipes':
+        session_start();
+        require __DIR__ . '/app/views/home/recipes/recipes.php';
+        break;
+
+    case '/recipes/view':
+        session_start();
+        require __DIR__ . '/app/views/home/recipes/view_recipe.php';
+        break;
+        //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/profile':
     case '/followers':
-    case '/recipes/view':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
         session_start();
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
-                case '/recipes':
-                    require __DIR__ . '/app/views/home/recipes/recipes.php';
-                    break;
-                case '/recipes/view':
-                    require __DIR__ . '/app/views/home/recipes/view_recipe.php';
-                    break;
                 case '/profile':
                     require __DIR__ . '/app/views/layouts/user.php';
                     break;
@@ -78,7 +79,7 @@ switch ($request) {
             http_response_code(403);
             echo "Acceso denegado. Debes ser administrador para acceder a esta página.";
             // te dejo los echos para que veas que puedo controlar rutas y casos de uso
-            // la parte de abajo es mas segura ya que no le indica al usuario que la página existe
+            // mandarle al 404 es mas seguro ya que no le indica al usuario que la página existe
             // header('Location: 404');
         }
         break;
