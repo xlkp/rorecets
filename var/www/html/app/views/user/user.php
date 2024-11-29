@@ -1,4 +1,16 @@
 <?php
+require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../controllers/profile_controller.php';
+
+
+if (isset($_GET['user']) && $_GET['user'] !== '') {
+    $id_user = $_GET['user'];
+    $profileController = new ProfileController($pdo);
+    $userData = $profileController->getUserDataById($id_user);
+} else {
+    header('Location: /404');
+    exit();
+}
 
 ?>
 
@@ -21,6 +33,10 @@
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
+                    <?php if ($userData['username'] !== $_SESSION['username']) { ?>
+                        <a href="/profile?user=<?php $mySelf = $profileController->getUserDataByName($_SESSION['username']);
+                        echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">MI PERFIL</a>
+                    <?php } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
@@ -42,7 +58,7 @@
             <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
                 <div class="text-center">
                     <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
-                        <?php echo strtoupper($_SESSION['username']) ?></h1>
+                        <?php echo strtoupper($userData['username']) ?></h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                         Prepara la cocina, porque hoy cae algo rico rico!! 🍽️🍳</p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">

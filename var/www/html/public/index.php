@@ -1,5 +1,10 @@
 <?php
 require __DIR__ . ('/../app/controllers/session_controller.php');
+require __DIR__ . ('/../app/controllers/profile_controller.php');
+require __DIR__ . ('/../config/config.php');
+
+$user = new ProfileController($pdo);
+$userData = $user->getUserDataByName($_SESSION['username']);
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +26,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
-                    <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                     <?php if (isset($menuAdmin)) {
                         echo '<a href="admin" class="text-sm/6 font-semibold text-green-800 hover:text-lg">' . $menuAdmin . '</a>';
                     } ?>
@@ -75,10 +80,10 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                     <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
                         <?php if (isset($menuAdmin)) {
                             echo 'Bienvenido administrador';
-                        } else echo 'Bienvenido, ' . $_SESSION['username']. '!🙉'; ?></h1>
+                        } else echo 'Bienvenido, ' . $_SESSION['username'] . '!🙉'; ?></h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                         <?php if (isset($menuAdmin)) {
-                            echo 'Procura ayudar a la gente con lo que necesite 😊👍';  
+                            echo 'Procura ayudar a la gente con lo que necesite 😊👍';
                         } else echo 'A ver que se te antoja hoy!! 🍽️🍳'; ?></p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <?php if (isset($menuAdmin)) {
@@ -89,7 +94,7 @@ require __DIR__ . ('/../app/controllers/session_controller.php');
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="recipes" class="text-sm/6 font-semibold text-gray-900">Moderar recetas<span
                                 aria-hidden="true">→</span></a>';
-                        }?>
+                        } ?>
                     </div>
                 </div>
             </div>

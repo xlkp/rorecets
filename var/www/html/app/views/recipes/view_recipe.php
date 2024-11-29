@@ -1,15 +1,19 @@
 <?php
-require_once __DIR__ . '/../../../models/Recipes.php';
-require_once __DIR__ . '/../../../../config/config.php';
-require_once __DIR__ . '/../../../controllers/comment_controller.php';
+require_once __DIR__ . '/../../models/Recipes.php';
+require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../controllers/comment_controller.php';
+require_once __DIR__ . '/../../controllers/profile_controller.php';
 if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
     $menuAdmin = true;
 }
 
 $recipes = new Recipes($pdo);
 
-if (isset($_GET['id_recipe'])) {
+if (isset($_GET['id_recipe']) && $_GET['id_recipe'] !== '') {
     $id_recipe = intval($_GET['id_recipe']);
+}else {
+    header('Location: /404');
+    exit();
 }
 $recipe = $recipes->getRecipeById($id_recipe);
 $authorRecipe = $recipes->getUserRecipeName($id_recipe);
@@ -37,20 +41,27 @@ switch ($rating) {
 }
 
 if (!$recipe) {
-    echo "Receta no encontrada.";
-    exit;
+    header('Location: /404');
+    exit();
 }
 
 $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
-$comments = $recipes->getCommentsByRecipeId($id_recipe);
 
+//comentarios
+$comments = $recipes->getCommentsByRecipeId($id_recipe);
 $commentsController = new CommentsController($recipes);
 $commentsController->handleRequest($id_recipe);
 
+//borrar receta
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
     $recipes->deleteRecipe($id_recipe);
     header("Location: /recipes");
     exit;
+}
+//usuario
+if (isset($_SESSION['username'])) {
+    $user = new ProfileController($pdo);
+    $userData = $user->getUserDataByName($_SESSION['username']);
 }
 ?>
 
@@ -78,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
                 <div class="flex lg:flex-1"></div>
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="/" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                    <a href="/profile" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                     <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -183,17 +194,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
                     ?>
                         <div class="border p-4 mt-4 rounded-lg shadow-md bg-gray-50">
                             <p class="font-semibold text-lg"><?php echo ($comment['username']); ?></p>
-
                             <p><?php echo $userRatingStars; ?></p>
                             <p class="mt-2 text-gray-800"><?php echo ($comment['description']); ?></p>
                             <p class="mt-2 text-sm text-gray-500"><?php echo ($comment['comment_date']); ?></p>
 
-
                             <?php if (isset($menuAdmin)): ?>
                                 <form method="post" action="/recipes/view?id_recipe=<?php echo $id_recipe?>" class="mt-2">
-
                                     <input type="hidden" name="id_comment" value="<?php echo ($comment['id_comment']); ?>">
-
                                     <button type="submit" name="delete_comment" class="text-red-500 hover:text-red-700">Eliminar</button>
                                 </form>
                             <?php endif; ?>

@@ -62,6 +62,10 @@ class Recipes
                 throw new Exception('Usuario no encontrado');
             }
 
+            if(!$image_recipe){
+                $image_recipe = 'default.png';
+            }
+
             // Insertar la receta
             $query = "INSERT INTO recipes (id_user, recipe_type, title, description, instructions, difficulty, image_recipe) 
                      VALUES (:id_user, :type, :title, :description, :instructions, :difficulty, :image_recipe)";
@@ -212,7 +216,7 @@ class Recipes
 
     public function deleteRecipe($id)
     {
-        $query = "SELECT image_name FROM recipes WHERE id_recipe = :id";
+        $query = "SELECT image_recipe FROM recipes WHERE id_recipe = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();

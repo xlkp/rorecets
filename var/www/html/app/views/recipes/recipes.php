@@ -1,19 +1,27 @@
 <?php
-require_once __DIR__ . '/../../../controllers/pagination_controller.php';
-require_once __DIR__ . '/../../../models/Recipes.php';
+require_once __DIR__ . '/../../controllers/pagination_controller.php';
+require_once __DIR__ . '/../../models/Recipes.php';
+require_once __DIR__ . '/../../controllers/profile_controller.php';
 
+if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
+    $menuAdmin = true;
+}
+
+// paginación
 $recipes = new Recipes($pdo);
-
 $recetasPorPagina = 4;
 $recipesController = new PaginationController($pdo);
-$paginationData = $recipesController->getPaginatedRecipes($recetasPorPagina);
+$paginationData = $recipesController->getPaginatedRecipes( $recetasPorPagina);
 
 $recetasPagina = $paginationData['recetasPagina'];
 $paginaActual = $paginationData['paginaActual'];
 $totalPaginas = $paginationData['totalPaginas'];
 
-if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
-    $menuAdmin = true;
+
+// usuario
+if(isset($_SESSION['username'])){
+    $user = new ProfileController($pdo);
+    $userData = $user->getUserDataByName($_SESSION['username']);
 }
 ?>
 
@@ -68,7 +76,7 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                 <?php if (isset($_SESSION['logged_in'])) { ?>
                     <div class="hidden lg:flex lg:gap-x-12">
                         <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                        <a href="profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                        <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">CREAR RECETAS</a>';
                         } else {
@@ -113,11 +121,11 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
                         <!-- siempre las mas recientes se ponen las primeras -->
                         <?php foreach ($recetasPagina as $recipe) { ?>
                             <li>
-                                <a class="group block overflow-hidden" href="/recipes/view?id_recipe=<?php echo urlencode(string: $recipe['id_recipe']); ?>">
+                                <a class="group block overflow-hidden" href="/recipes/view?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                                     <div class="image-container">
                                         <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="<?php echo ($recipe['title']); ?>" class="image h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]">
                                         <?php if (isset($menuAdmin)) { ?>
-                                            <a class="edit-button" href="/recipes/edit?id_recipe=<?php echo urlencode($recipe['id_recipe']); ?>">
+                                            <a class="edit-button" href="/recipes/edit?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                                                 ✏️ Editar
                                             </a>
                                         <?php } ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../controllers/recipes_controller.php';
+require_once __DIR__ . '/../../controllers/recipes_controller.php';
 
 $recipes = new Recipes($pdo);
 $userRecipes = $recipes->getUserRecipes();
@@ -182,10 +182,10 @@ $allIngredientsJson = json_encode($allIngredients);
                 $colSpanClass = ($i % 5 === 0 || $i % 5 === 3 || $i % 5 === 4) ? '' : 'lg:col-span-2';
             ?>
                 <div class="min-h-32 <?= $colSpanClass ?>">
-                    <a class="block" href="/recipes/view?id_recipe=<?php echo urlencode($recipe['id_recipe']); ?>">
+                    <a class="block" href="/recipes/view?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                         <div class="image-container">
                             <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="<?php echo ($recipe['title']); ?>" class="image h-56 w-full rounded-bl-3xl rounded-tr-3xl object-cover sm:h-64 lg:h-72">
-                            <a class="edit-button" href="/recipes/view?id_recipe=<?php echo urlencode($recipe['id_recipe']); ?>">
+                            <a class="edit-button" href="/recipes/view?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                                 ✏️ Editar
                             </a>
                         </div>

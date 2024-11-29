@@ -60,6 +60,12 @@ También he implementado en la estructura lo que viene a ser los modulos, pero e
 - PROTECTOR DE RUTAS
 - Protego las rutas más sensibles con variables de sesión para evitar que por ejemplo entren a admin y me borren usuarios o recetas
 
+// 20241128 Cambios en las rutas
+
+- Ignora las rutas con parámetros get en la cabecera, para permitir el uso de este método.
+
+// El usuario puede seleccionar su foto de perfil de una selección ya predifinida
+
 ## SQL
 
 // 20241102 diseñado y creado el sql (va a ir cambiando dependiendo las necesidades)
@@ -141,7 +147,7 @@ create table followers (
 
 - unregistered user : login, register, see home page.
 - registered user: login, close session, see all recipes, comment on them and follow other users, delete own recipes.
-- admin: login, close session, delete or make users admin too, delete users recipes.
+- admin: login, close session, delete or make users admin too, delete recipes.
 
 ## SQL MODIFICATIONS OR INSERTIONS
 
@@ -151,6 +157,6 @@ insert into users (username, pwd, email, exp, is_admin) VALUES ('master', '$2b$1
 
 -- added route for the recipe image 
 ALTER TABLE recipes
-ADD COLUMN image_recipe VARCHAR(255) DEFAULT 'assets/img/recipes/default.png';
+ADD COLUMN image_recipe VARCHAR(255) DEFAULT 'default.png';
 
 ```

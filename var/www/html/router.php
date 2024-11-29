@@ -25,12 +25,12 @@ switch ($request) {
         
     case '/recipes':
         session_start();
-        require __DIR__ . '/app/views/home/recipes/recipes.php';
+        require __DIR__ . '/app/views/recipes/recipes.php';
         break;
 
     case '/recipes/view':
         session_start();
-        require __DIR__ . '/app/views/home/recipes/view_recipe.php';
+        require __DIR__ . '/app/views/recipes/view_recipe.php';
         break;
         //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/profile':
@@ -40,10 +40,10 @@ switch ($request) {
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
                 case '/profile':
-                    require __DIR__ . '/app/views/layouts/user.php';
+                    require __DIR__ . '/app/views/user/user.php';
                     break;
                 case '/followers':
-                    require __DIR__ . '/app/views/home/followers.php';
+                    require __DIR__ . '/app/views/user/followers.php';
                     break;
                 case '/validarReceta':
                     require __DIR__ . '/app/controllers/recipes_controller.php';
@@ -63,16 +63,16 @@ switch ($request) {
         if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
             switch ($request) {
                 case '/admin':
-                    require __DIR__ . '/app/views/layouts/admin.php';
+                    require __DIR__ . '/app/views/user/admin.php';
                     break;
                 case '/recipes/mine':
-                    require __DIR__ . '/app/views/home/recipes/admin_recipes.php';
+                    require __DIR__ . '/app/views/recipes/admin_recipes.php';
                     break;
                 case '/validarReceta':
                     require __DIR__ . '/app/controllers/recipes_controller.php';
                     break;
                 case '/recipes/edit':
-                    require __DIR__ . '/app/views/home/recipes/edit_recipe.php';
+                    require __DIR__ . '/app/views/recipes/edit_recipe.php';
                     break;
             }
         } else {
@@ -86,11 +86,11 @@ switch ($request) {
 
         //------------------------- ERROR ---------------------
     case '/404':
-        require __DIR__ . '/app/views/layouts/404.html';
+        require __DIR__ . '/app/views/auth/404.html';
         break;
 
     default:
         http_response_code(404);
-        require __DIR__ . '/app/views/layouts/404.html';
+        require __DIR__ . '/app/views/auth/404.html';
         break;
 }

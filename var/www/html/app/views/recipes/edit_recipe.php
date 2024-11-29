@@ -1,20 +1,30 @@
 <?php
-require_once __DIR__ . '/../../../models/Recipes.php';
-require_once __DIR__ . '/../../../../config/config.php';
+require_once __DIR__ . '/../../models/Recipes.php';
+require_once __DIR__ . '/../../../config/config.php';
 
 $recipes = new Recipes($pdo);
 
-if (isset($_GET['id_recipe'])) {
+if (isset($_GET['id_recipe']) && !empty($_GET['id_recipe'])) {
     $id_recipe = intval($_GET['id_recipe']);
+} else {
+    header('Location: /404');
+    exit();
 }
 $recipe = $recipes->getRecipeById($id_recipe);
 
 if (!$recipe) {
-    echo "Receta no encontrada.";
-    exit;
+    header('Location: /404');
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (isset($_POST['deleteRecipe'])) {
+        $recipes->deleteRecipe($_GET['id_recipe']);
+        header("Location: /recipes");
+        exit;
+    }
+
     if (isset($_FILES['image_recipe']) && $_FILES['image_recipe']['error'] === UPLOAD_ERR_OK) {
         $fileExtension = strtolower(pathinfo($_FILES['image_recipe']['name'], PATHINFO_EXTENSION));
         $originalFileName = pathinfo($_FILES['image_recipe']['name'], PATHINFO_FILENAME);
@@ -105,8 +115,15 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
             <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="Imagen de la receta" class="w-1/2 h-auto rounded-lg shadow-lg">
         </div>
         <div class="mt-8">
+            <div class="flex justify-end"></div>
             <h1 class="text-2xl font-bold text-center"><?php echo $recipe['title'] ?></h1>
-            <form id="editRecipeForm" action="/recipes/edit?id_recipe=<?php echo $id_recipe?>" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto mt-6">
+            <div class="flex justify-center">
+                <form action="/recipes/edit?id_recipe=<?php echo $id_recipe ?>" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta receta?');">
+                    <input type="hidden" name="deleteRecipe" value="true">
+                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">Eliminar Receta</button>
+                </form>
+            </div>
+            <form id="editRecipeForm" action="/recipes/edit?id_recipe=<?php echo $id_recipe ?>" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto mt-6">
                 <div class="space-y-4">
                     <label class="block">
                         <span class="text-gray-700">Tipo de receta</span>
