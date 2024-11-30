@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
 if (isset($_SESSION['username'])) {
     $user = new ProfileController($pdo);
     $userData = $user->getUserDataByName($_SESSION['username']);
-}
+} 
 ?>
 
 <!DOCTYPE html>

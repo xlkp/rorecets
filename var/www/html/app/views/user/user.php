@@ -7,6 +7,36 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
     $id_user = $_GET['user'];
     $profileController = new ProfileController($pdo);
     $userData = $profileController->getUserDataById($id_user);
+    $mySelf = $profileController->getUserDataByName($_SESSION['username']);
+    $followed = $profileController->getFollowed($mySelf['id_user']);
+
+    // my followers
+    $followers = $profileController->getFollowers($mySelf['id_user']);
+    $countFollowers = count($followers);
+
+    // user followers
+    $userFollowers = $profileController->getFollowers($id_user);
+    $countUserFollowers = count($userFollowers);
+
+    $isFollowed = false;
+
+    foreach ($followed as $follower) {
+        if ($follower['id_user'] == $id_user) {
+            $isFollowed = true;
+            break;
+        }
+    }
+    if (isset($_POST['follow']) && !$isFollowed) {
+        $profileController->follow($mySelf['id_user'], $_POST['user_id']);
+        header('Location: /profile?user=' . $_POST['user_id']);
+        exit();
+    }
+
+    if (isset($_POST['unfollow']) && $isFollowed) {
+        $profileController->unfollow($mySelf['id_user'], $_POST['user_id']);
+        header('Location: /profile?user=' . $_POST['user_id']);
+        exit();
+    }
 } else {
     header('Location: /404');
     exit();
@@ -34,8 +64,7 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                 <div class="hidden lg:flex lg:gap-x-12">
                     <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
                     <?php if ($userData['username'] !== $_SESSION['username']) { ?>
-                        <a href="/profile?user=<?php $mySelf = $profileController->getUserDataByName($_SESSION['username']);
-                        echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">MI PERFIL</a>
+                        <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">MI PERFIL</a>
                     <?php } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -60,10 +89,43 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                     <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
                         <?php echo strtoupper($userData['username']) ?></h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
-                        Prepara la cocina, porque hoy cae algo rico rico!! 🍽️🍳</p>
-                    <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a href="followers" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
-                    </div>
+                        <?php if ($userData['username'] !== $_SESSION['username']) { ?>
+                            <?php if ($countUserFollowers > 1) { ?>
+                                <?php echo $countFollowers; ?> seguidores
+                            <?php } else if ($countUserFollowers > 0) { ?>
+                                <?php echo $countUserFollowers;  ?> seguidor
+                            <?php } else { ?>
+                                No tiene seguidores 😢, sé su primer seguidor!!🎊
+                            <?php } ?>
+                        <?php } else { ?>
+                            <?php if ($countFollowers > 1) { ?>
+                                Tienes <?php echo $countFollowers; ?> seguidores!! 🙉
+                            <?php } else if ($countFollowers > 0) { ?>
+                                Tienes <?php echo $countFollowers; ?> seguidor!! 🙉
+                            <?php } else { ?>
+                                No tienes seguidores 😢
+                            <?php } ?>
+                        <?php } ?>
+                    </p>
+                    <?php if ($userData['username'] !== $_SESSION['username']) { ?>
+                        <div class="mt-4">
+                            <?php if ($isFollowed === false) { ?>
+                                <form action="" method="post">
+                                    <input type="hidden" name="user_id" value="<?php echo $id_user; ?>">
+                                    <button type="submit" name="follow" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguir</button>
+                                </form>
+                            <?php } else { ?>
+                                <form action="" method="post">
+                                    <input type="hidden" name="user_id" value="<?php echo $id_user; ?>">
+                                    <button type="submit" name="unfollow" class="rounded-md bg-red-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Dejar de seguir</button>
+                                </form>
+                            <?php } ?>
+                        </div>
+                    <?php } else { ?>
+                        <div class="mt-10 flex items-center justify-center gap-x-6">
+                            <a href="followers?user=<?php echo $mySelf['id_user']?>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
             <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"

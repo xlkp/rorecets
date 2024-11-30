@@ -11,7 +11,8 @@ class ProfileController{
     {
         $consulta = "SELECT * FROM users WHERE username = :username";
         $stmt = $this->pdo->prepare($consulta);
-        $stmt->bindValue(':username', $username, PDO::PARAM_INT);
+        // se me habia olvidado pasar el parametro a string y me segui a mi mismo soy un genio incomprendido
+        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $userData = $stmt->fetch();
 
@@ -59,7 +60,7 @@ class ProfileController{
 
     public function getFollowers($id_user)
     {
-        $consulta = "SELECT u.* FROM users u INNER JOIN followers f ON u.id_user = f.id_follower WHERE f.id_followed = :id_user";
+        $consulta = "SELECT users.* FROM users INNER JOIN followers ON users.id_user = followers.id_follower WHERE followers.id_followed = :id_user";
         $stmt = $this->pdo->prepare($consulta);
         $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
         $stmt->execute();
@@ -68,7 +69,7 @@ class ProfileController{
 
     public function getFollowed($id_user)
     {
-        $consulta = "SELECT u.* FROM users u INNER JOIN followers f ON u.id_user = f.id_followed WHERE f.id_follower = :id_user";
+        $consulta = "SELECT users.* FROM users INNER JOIN followers ON users.id_user = followers.id_followed WHERE followers.id_follower = :id_user";
         $stmt = $this->pdo->prepare($consulta);
         $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
         $stmt->execute();
