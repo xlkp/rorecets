@@ -51,7 +51,7 @@ switch ($request) {
             }
         } else {
             http_response_code(403);
-            echo "Acceso denegado. Debes iniciar sesión para acceder a esta página.";
+            header('Location: 403/login');
             // header('Location: 404');
         }
         break;
@@ -77,8 +77,8 @@ switch ($request) {
             }
         } else {
             http_response_code(403);
-            echo "Acceso denegado. Debes ser administrador para acceder a esta página.";
-            // te dejo los echos para que veas que puedo controlar rutas y casos de uso
+            header('Location: 403/admin');
+            // los mando a rutas personalizadas dependiendo de si han iniciado sesion o son admins
             // mandarle al 404 es mas seguro ya que no le indica al usuario que la página existe
             // header('Location: 404');
         }
@@ -87,6 +87,13 @@ switch ($request) {
         //------------------------- ERROR ---------------------
     case '/404':
         require __DIR__ . '/app/views/auth/404.html';
+        break;
+
+    case '/403/login':
+        require __DIR__ . '/app/views/auth/noLogin.html';
+        break;
+    case '/403/admin':
+        require __DIR__ . '/app/views/auth/noAdmin.html';
         break;
 
     default:
