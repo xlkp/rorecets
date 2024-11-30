@@ -6,7 +6,6 @@ require_once __DIR__ . '/../../controllers/profile_controller.php';
 if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
     $menuAdmin = true;
 }
-
 // paginación
 $recipes = new Recipes($pdo);
 $recetasPorPagina = 4;
@@ -16,7 +15,6 @@ $paginationData = $recipesController->getPaginatedRecipes( $recetasPorPagina);
 $recetasPagina = $paginationData['recetasPagina'];
 $paginaActual = $paginationData['paginaActual'];
 $totalPaginas = $paginationData['totalPaginas'];
-
 
 // usuario
 if(isset($_SESSION['username'])){
@@ -80,7 +78,7 @@ if(isset($_SESSION['username'])){
                         <?php if (isset($menuAdmin)) {
                             echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">CREAR RECETAS</a>';
                         } else {
-                            echo '<a href="/followers" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">SEGUIDORES</a>';
+                            echo '<a href="/followers?user=' . $userData["id_user"] . '" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">SEGUIDORES</a>';
                         } ?>
 
                     </div>

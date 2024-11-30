@@ -193,7 +193,7 @@ if (isset($_SESSION['username'])) {
                         }
                     ?>
                         <div class="border p-4 mt-4 rounded-lg shadow-md bg-gray-50">
-                            <p class="font-semibold text-lg"><?php echo ($comment['username']); ?></p>
+                            <a href="/profile?user=<?php echo $comment['id_user']?>" class="font-semibold text-lg"><?php echo ($comment['username']); ?></a>
                             <p><?php echo $userRatingStars; ?></p>
                             <p class="mt-2 text-gray-800"><?php echo ($comment['description']); ?></p>
                             <p class="mt-2 text-sm text-gray-500"><?php echo ($comment['comment_date']); ?></p>
