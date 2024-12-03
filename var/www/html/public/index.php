@@ -25,10 +25,10 @@ $userData = $user->getUserDataByName($_SESSION['username']);
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
-                    <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="recipes" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">RECETAS</a>
+                    <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                     <?php if (isset($menuAdmin)) {
-                        echo '<a href="admin" class="text-sm/6 font-semibold text-green-800 hover:text-lg">' . $menuAdmin . '</a>';
+                        echo '<a href="admin" class="text-sm/6 font-semibold text-red-800 hover:text-lg">' . $menuAdmin . '</a>';
                     } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">

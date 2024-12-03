@@ -40,6 +40,7 @@ class ProfileController{
         return $userData;
     }
 
+    // seguidores
     public function follow($id_follower, $id_followed)
     {
         $consulta = "INSERT INTO followers (id_follower, id_followed) VALUES (:id_follower, :id_followed)";
@@ -80,5 +81,7 @@ class ProfileController{
     {
         return $this->unfollow($id_follower, $id_followed);
     }
+
+    // editar perfil
 
 }
