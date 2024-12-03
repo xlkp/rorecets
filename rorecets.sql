@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql-db
--- Generation Time: Dec 03, 2024 at 07:37 PM
+-- Generation Time: Dec 03, 2024 at 08:36 PM
 -- Server version: 8.0.39
 -- PHP Version: 8.2.8
 
@@ -178,7 +178,7 @@ CREATE TABLE `recipes` (
   `instructions` text,
   `difficulty` tinyint DEFAULT NULL,
   `publication_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `image_recipe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'assets/img/recipes/default.png'
+  `image_recipe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'default.png'
 ) ;
 
 --
@@ -189,7 +189,22 @@ INSERT INTO `recipes` (`id_recipe`, `id_user`, `recipe_type`, `title`, `descript
 (11, 1, 'Tradicional', 'Chiftele de porc marinate', '30 minutos', 'Se prepară sosul de roșii. Într-o tigaie mare antiaderentă, la foc mediu-mare, se rumenește ușor usturoiul în ulei cu frunza de dafin și fulgii de ardei. Se adaugă roșiile și se fierb timp de 30 de minute. Când încep să se înmoaie, se zdrobesc grosier roșiile cu ajutorul unui zdrobitor pentru cartofi. Se condimentează cu sare și piper. Tigaia se ține la cald.\r\nSe pregătesc chitelele. Într-un robot de bucătărie, pisați pâinea până devine pesmet. Într-un castron mare, înmuiați pesmetul în lapte timp de 5 minute. Adăugați carnea tocată, parmezanul, oul, usturoiul, pătrunjelul, sarea, piperul, oregano,fulgii de ardei și, folosind mâinile, amestecați bine.', 2, '2024-11-26 18:21:28', 'chiftele_20241126182128.png'),
 (12, 1, 'Tradicional', 'Iahnie de fasole de post', '40 minutos', 'Fasolea se alege, se spală în câteva ape şi apoi se lasă de seara până dimineaţa să se înmoaie. Dimineaţa se scoate şi se pune să fiarbă în 2-3 ape, pentru a elimina toate toxinele. După ce a fiert şi bobul este moale, dar întreg, se pune să se scurgă în sită.\r\n\r\nÎn acest timp, se taie ceapa solzişori, usturoiul se pisează şi se pun să se călească într-o cratiţă cu ulei. Când ceapa a devenit sticloasă, se adaugă fasolea şi puţină apă.\r\n\r\nSeparat, se pregăteşte pasta de roşii cu sare, piper, cimbru şi boia, iar dacă pasta este prea groasă, se adaugă puţină apă călduţă şi se toarnă peste fasole. Se adaugă şi o foaie de dafin şi se lasă să scadă, la foc potrivit, la cuptor. Se serveşte cu murături şi se ornează cu pătrunjel verde.', 1, '2024-11-28 14:22:09', 'fasole de post_20241128142209.webp'),
 (13, 1, 'Lamington', 'Prăjitura „Tăvălită cu cocos”', 'Media hora aprox', 'Pentru început, preîncălzește cuptorul la treaptă mare.\r\n\r\nÎntr-un vas mare, bate ouăle cu ajutorul unui mixer. Adaugă, treptat, zahărul și vanilia, până obții un amestec omogen și fin. Toarnă treptat, făina și praful de copt, amestecând ușor și cu gesturi largi cu o spatulă.\r\n\r\nCând s-a omogenizat, toarnă untul (topit și lăsat la temperatura camerei) și amestecă. Pune compoziția într-o tavă care nu se lipește și dă la cuptor 25 de minute. Lasă pandișpanul la răcit și apucă-te de glazură. Topește untul ușor într-o cratiță, toarnă laptele și amestecă. Cerne zahărul și pudra de cacao, amestecă încet până începe să se îngroașe glazura.\r\n\r\nSpre final, adaugă esența de rom. Lasă un pic la răcit glazura. Între timp taie pandișpanul în cubulețe. Înfige, pe rând, o furculiță în fiecare cub în parte, înmoaie bine în glazură până se acoperă uniform, scurge excesul și dă prin nuca de cocos.', 3, '2024-11-28 15:02:56', 'prajitura_20241128150256.webp'),
-(15, 1, 'Tradicional', 'Friptură de porc cu bere', '20 minutos si no te bebes la cerveza', 'Friptura de porc este întotdeauna cel mai bun fel principal de mâncare. Printre cele mai consumate rețete, friptura de porc la cuptor, se pregătește extrem de repede, iar gustul este cu adevărat savuros. Astăzi îți spunem o rețetă la fel de simplă, dar în care adăugăm un ingredient în plus: friptură de porc cu bere!\r\n\r\n1. Într-un vas, se topeşte untul şi se pun două cepe tăiate peştişori şi usturoiul. Se potriveşte de sare şi piper, se toarnă berea şi se lasă pe foc circa 10 minute, până se reduce la jumătate.\r\n\r\n2. Între timp, celelalte trei cepe se taie şi ele peştişori şi se pun în tava de copt. Carnea se sărează şi se piperează şi se unge din abundenţă cu ulei. Se aşează carnea peste ceapă şi se unge cu miere. Se dă la cuptor pentru o oră.\r\n\r\n3. După acest timp se adaugă sosul de bere şi ceapă şi se lasă din nou la cuptor până ce şi ceapa şi carnea se rumenesc frumos.\r\n\r\n4. După coacere, se mai lasă 10 minute înainte de a fi tăiată şi adusă la masă.', 3, '2024-11-28 15:14:25', 'fripturabere_20241128151425.webp');
+(15, 1, 'Tradicional', 'Friptură de porc cu bere', '20 minutos si no te bebes la cerveza', 'Friptura de porc este întotdeauna cel mai bun fel principal de mâncare. Printre cele mai consumate rețete, friptura de porc la cuptor, se pregătește extrem de repede, iar gustul este cu adevărat savuros. Astăzi îți spunem o rețetă la fel de simplă, dar în care adăugăm un ingredient în plus: friptură de porc cu bere!\r\n\r\n1. Într-un vas, se topeşte untul şi se pun două cepe tăiate peştişori şi usturoiul. Se potriveşte de sare şi piper, se toarnă berea şi se lasă pe foc circa 10 minute, până se reduce la jumătate.\r\n\r\n2. Între timp, celelalte trei cepe se taie şi ele peştişori şi se pun în tava de copt. Carnea se sărează şi se piperează şi se unge din abundenţă cu ulei. Se aşează carnea peste ceapă şi se unge cu miere. Se dă la cuptor pentru o oră.\r\n\r\n3. După acest timp se adaugă sosul de bere şi ceapă şi se lasă din nou la cuptor până ce şi ceapa şi carnea se rumenesc frumos.\r\n\r\n4. După coacere, se mai lasă 10 minute înainte de a fi tăiată şi adusă la masă.', 3, '2024-11-28 15:14:25', 'fripturabere_20241128151425.webp'),
+(16, 1, 'Tradicional', 'Sarmale în foi de varză', '2 horas', 'Se aleg foile de varză și se opăresc în apă cu sare. Se pregătește umplutura din carne tocată, orez, ceapă călită și condimente. Se rulează fiecare foaie de varză cu umplutură, se așază în cratiță și se acoperă cu apă și suc de roșii. Se fierb la foc mic timp de 2 ore.', 3, '2024-12-01 10:00:00', 'default.png'),
+(17, 1, 'Tradicional', 'Ciorbă de perișoare', '1 ora', 'Se pregătește supa din legume, iar perișoarele se fac din carne tocată, orez și ouă. Se fierb perișoarele în supă până se ridică la suprafață. Se adaugă bors pentru acreală.', 2, '2024-12-01 11:00:00', 'default.png'),
+(18, 1, 'Desert', 'Plăcintă cu mere', '1 ora', 'Se pregătește aluatul fraged și se umple cu mere rase, zahăr și scorțișoară. Se coace la cuptor până devine aurie.', 1, '2024-12-02 09:00:00', 'default.png'),
+(19, 1, 'Internacional', 'Tacos de carne', '30 minutos', 'Carnea se prăjește cu condimente. Se umplu tortillas cu carne, legume proaspete și sosuri.', 1, '2024-12-02 13:00:00', 'default.png'),
+(20, 1, 'Internacional', 'Pizza Margherita', '2 horas', 'Se pregătește aluatul de pizza, se întinde și se adaugă sos de roșii, mozzarella și busuioc proaspăt. Se coace în cuptor încins.', 2, '2024-12-02 18:00:00', 'default.png'),
+(21, 1, 'Salată', 'Salată de vinete', '40 minutos', 'Vinetele se coc, se curăță și se toacă. Se amestecă cu ceapă tocată mărunt, ulei și sare.', 1, '2024-12-03 08:00:00', 'default.png'),
+(22, 1, 'Pește', 'Pastrav la cuptor', '1 ora', 'Peștele se curăță, se condimentează și se așază în tavă cu legume și lămâie. Se coace în cuptor.', 2, '2024-12-03 12:00:00', 'default.png'),
+(23, 1, 'Desert', 'Clătite cu gem', '30 minutos', 'Se face aluatul de clătite din ouă, lapte și făină. Se prăjesc pe rând și se umplu cu gem.', 1, '2024-12-03 15:00:00', 'default.png'),
+(24, 1, 'Internacional', 'Burger clasic', '30 minutos', 'Carnea de vită se formează în chifle și se prăjește. Se montează burgerii cu salată, roșii, ceapă și sosuri.', 2, '2024-12-03 18:00:00', 'default.png'),
+(25, 1, 'Supe', 'Supă cremă de dovleac', '1 ora', 'Dovleacul se fierbe cu ceapă și cartofi. Se pasează și se adaugă smântână și condimente.', 1, '2024-12-04 09:00:00', 'default.png'),
+(26, 1, 'Tradicional', 'Mămăligă cu brânză și smântână', '20 minutos', 'Mălaiul se fierbe în apă cu sare până devine mămăligă. Se servește cu brânză rasă și smântână.', 1, '2024-12-04 11:00:00', 'default.png'),
+(27, 1, 'Pește', 'Somon la grătar', '25 minutos', 'Somonul se condimentează și se prăjește pe grătar. Se servește cu lămâie și legume proaspete.', 2, '2024-12-04 13:00:00', 'default.png'),
+(28, 1, 'Internacional', 'Pasta Carbonara', '20 minutos', 'Pastele se fierb, iar sosul se face din ou, parmezan, pancetta și piper. Se amestecă totul la final.', 2, '2024-12-04 15:00:00', 'default.png'),
+(29, 1, 'Desert', 'Cheesecake clasic', '2 ore', 'Se face o bază din biscuiți și unt. Crema se face din brânză, smântână și zahăr. Se coace la bain-marie.', 3, '2024-12-04 17:00:00', 'default.png'),
+(30, 1, 'Internacional', 'Paella cu fructe de mare', '1 ora', 'Se pregătește orezul cu șofran, legume și fructe de mare. Se lasă la foc mic până se gătește complet.', 3, '2024-12-04 19:00:00', 'default.png');
 
 -- --------------------------------------------------------
 
@@ -257,7 +272,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id_user`, `username`, `email`, `pwd`, `exp`, `is_admin`, `registration_date`) VALUES
 (1, 'master', 'master@xlkp.com', '$2b$12$qCZuRjvq1qzyaaCkfyMbceqQ/vVT.tAZuvjYUjFnJ33hSZ1F.P9rS', 'creator of many pot holes in history', 1, '2024-11-07 15:16:35'),
 (2, 'stef', 'stef@stef.com', '$2y$10$p9KZ6mkL9mvftNY7KvNZmuxCtq2K5O/FRZpjP16SipsgNbthxl3p.', 'im cooked', 0, '2024-11-07 15:23:31'),
-(9, 'offmary', 'chirasmaria08@gmail.com', '$2y$10$dungbBNVeIvhGNOWS23xy.094gvkUF8hA/ZSfMQ8SIANPrvap0ajW', 'Intermedio', 0, '2024-11-10 19:24:15');
+(9, 'offmary', 'chirasmaria08@gmail.com', '$2y$10$dungbBNVeIvhGNOWS23xy.094gvkUF8hA/ZSfMQ8SIANPrvap0ajW', 'Intermedio', 0, '2024-11-10 19:24:15'),
 (13, 'alice', 'alice@example.com', '$2b$12$z.8iAW2FNwHkdXw66Y6Ccu2QV2eaSifS3SLWylzzT92Ah2Dc95.gm', 'Principiante', 0, '2024-12-04 10:30:00'),
 (14, 'bob', 'bob@example.com', '$2b$12$phUt8J.U5Uzd7t5ujATKqudGm8DFguBhOdNa0gldOa2KEzozSBoxq', 'Intermedio', 0, '2024-12-04 10:35:00'),
 (15, 'charlie', 'charlie@example.com', '$2b$12$VxPt0YsawLpvWl8ArV.YGOnXRelS2PJXLoau7G64n37hw497OUjwe', 'Avanzada', 0, '2024-12-04 10:40:00'),
@@ -273,8 +288,6 @@ INSERT INTO `users` (`id_user`, `username`, `email`, `pwd`, `exp`, `is_admin`, `
 (25, 'michael', 'michael@example.com', '$2b$12$URuXZimjxoOpOAZoi7GXDe..3kIO3YB4iKXDpufDorpvdPDRUwrRK', 'Principiante', 0, '2024-12-04 11:30:00'),
 (26, 'nora', 'nora@example.com', '$2b$12$70l7UsRVQ6ip4kY5LujJNuiJ78WiH2MCmQuWHIsWD2KHkMgV5xMxi', 'Intermedio', 0, '2024-12-04 11:35:00'),
 (27, 'oliver', 'oliver@example.com', '$2b$12$.3E0d9VFTOhvpmtD89mbvuAHmn.pUoCoSt07QBntsXTeHM8POJI.C', 'Avanzada', 0, '2024-12-04 11:40:00');
-
-
 
 --
 -- Indexes for dumped tables
@@ -371,7 +384,7 @@ ALTER TABLE `recipes_ingredients`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
