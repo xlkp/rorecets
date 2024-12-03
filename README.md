@@ -6,33 +6,51 @@
 
 ``` shell
 rorecets/
-├──app/
+├── app/
 │   ├── controllers/
-│   │   ├── session_controller.php
-│   │   ├── register.php
-│   │   └── login.php
+│   │   ├── admin_controller.php
+│   │   ├── auth_controller.php
+│   │   ├── comment_controller.php
+│   │   ├── pagination_controller.php
+│   │   ├── profile_controller.php
+│   │   └── recipes_controller.php
 │   ├── models/
 │   │   └── Recipes.php
 │   └── views/
-│       ├── home/
-│       │   └── index.html
 │       ├── auth/
+│       │   ├── 404.html
+│       │   ├── change_password.html
 │       │   ├── login.html
+│       │   ├── noAdmin.html
+│       │   ├── noLogin.html
 │       │   └── register.html
-│       └── layouts/
-│           ├── 404.html
-│           └── admin.html
-├──config/
+│       ├── recipes/
+│       │   ├── admin_recipes.php
+│       │   ├── edit_recipe.php
+│       │   ├── recipes.php
+│       │   └── view_recipe.php
+│       └── user/
+│           ├── admin.php
+│           ├── edit_profile.php
+│           ├── followers.php
+│           └── user.php
+├── assets/
+│   └── img/
+│       ├── auth-bg.jpg
+│       └── recipes/
+├── config/
 │   └── config.php
-├──public/
-│   ├── css/
-│   │   └── main.css
-│   ├── js/
-│   │   └── main.js
+├── public/
 │   └── index.php
-├──router.php
-└──.htaccess
-
+├── var/
+│   ├── lock/
+│   ├── log/
+│   └── run/
+├── .htaccess
+├── apache2.conf
+├── docker-compose.yml
+├── PHP.Dockerfile
+└── rorecets.sql
 ```
 
 ## IDEA
@@ -44,6 +62,8 @@ Al trabajar con angular en la Dual he decidido hacer la estructura de esta aplic
 También he implementado en la estructura lo que viene a ser los modulos, pero en vez de separarlos por componentes, los he estructurado por el estándar MVC(Modelo Vista Controlador).
 
 ## EXTRAS
+
+//20241201 añadido seguir a usuarios, quitar seguidores, etc (currada padre)
 
 // Imágenes related
 
