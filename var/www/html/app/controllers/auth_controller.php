@@ -1,6 +1,13 @@
 <?php
 require __DIR__ . '/../../config/config.php';
 
+if (isset($_GET['closeSession']) && $_GET['closeSession'] == 1) {
+	session_unset();
+	session_destroy();
+	header("Location: /login");
+	exit();
+}
+
 if (isset($_POST['username'])) {
 	$username = $_POST['username'];
 	if (isset($_POST['logged_in'])) {
@@ -10,7 +17,6 @@ if (isset($_POST['username'])) {
 			$pwdValidate = $_POST['pwd'];
 			$admin = $hash['is_admin'];
 			if (password_verify($pwdValidate, $hash['pwd'])) {
-				session_start();
 				$_SESSION['username'] = $_POST['username'];
 				$_SESSION['logged_in'] = true;
 				if ($admin === 1) {
@@ -76,7 +82,6 @@ if (isset($_POST['username'])) {
 	}
 } else {
 	if (isset($_POST['closeSession'])) {
-		session_start();
 		session_unset();
 		session_destroy();
 		header("Location: /login");

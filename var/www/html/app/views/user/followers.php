@@ -33,6 +33,7 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rorecets</title>
+
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
@@ -44,12 +45,13 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">MI PERFIL</a>
+                    <a href="/" class="text-lg/6 font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                    <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-lg/6 font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">MI PERFIL</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
                         <input type="submit" name="closeSession" value="Cerrar sesión"
-                            class="text-sm/6 font-semibold text-gray-800 hover:text-lg"> <span
+                            class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"> <span
                             aria-hidden="true">&rarr;</span></input>
                     </form>
                 </div>

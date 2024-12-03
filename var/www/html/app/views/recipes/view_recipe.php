@@ -19,7 +19,6 @@ if (isset($_GET['id_recipe']) && $_GET['id_recipe'] !== '') {
 $recipe = $recipes->getRecipeById($id_recipe);
 $authorRecipe = $recipes->getUserRecipeName($id_recipe);
 $rating = $recipes->getAverageRating($id_recipe);
-
 switch ($rating) {
     case 1:
         $avgRating = "⭐";
@@ -63,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
 if (isset($_SESSION['username'])) {
     $user = new ProfileController($pdo);
     $userData = $user->getUserDataByName($_SESSION['username']);
+    $userRecipe = $user->getUserDataByName($authorRecipe);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
@@ -85,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
 <head>
     <meta charset="UTF-8">
     <title>Ver Receta</title>
+    <?php if (isset($_SESSION['username'])) { ?><?php } ?>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     <script>
         function toggleReplyForm(commentId) {
@@ -112,13 +113,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
             <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div class="flex lg:flex-1"></div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/" class="text-sm font-semibold text-blue-800 hover:text-lg">INICIO</a>
-                    <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
-                    <a href="/recipes" class="text-sm font-semibold text-red-800 hover:text-lg">OTRAS RECETAS</a>
+                    <a href="/" class="text-lg font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                    <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-lg font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="/recipes" class="text-lg font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">OTRAS RECETAS</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="/auth" method="post">
-                        <input type="submit" name="closeSession" value="Cerrar sesión" class="text-sm font-semibold text-gray-800 hover:text-lg">
+                        <input type="submit" name="closeSession" value="Cerrar sesión" class="text-lg font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
                         <span aria-hidden="true">&rarr;</span>
                     </form>
                 </div>
@@ -127,9 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
             <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div class="flex lg:flex-1"></div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                    <a href="/login" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIAR SESIÓN</a>
-                    <a href="/register" class="text-sm font-semibold text-gray-800 hover:text-lg">REGISTRARSE</a>
+                    <a href="/recipes" class="text-lg font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                    <a href="/login" class="text-lg font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIAR SESIÓN</a>
+                    <a href="/register" class="text-lg font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">REGISTRARSE</a>
                 </div>
             </nav>
         <?php } ?>
@@ -145,9 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
             </div>
         </div>
         <div class="flex flex-row mt-8">
-            <!-- Left side: Ingredients, Comments, and Add Comment -->
             <div class="w-1/2">
-                <!-- Ingredients Section -->
                 <div class="mt-8">
                     <h1 class="text-2xl  font-bold text-center"><?php echo $recipe['title'] ?></h1>
                     <div class="max-w-xl mx-auto mt-6">
@@ -319,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
             <!-- Right side: Image, Username, and Rating -->
             <div class="w-1/2 flex flex-col items-center">
                 <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="Imagen de la receta" class="w-3/4 h-auto rounded-lg shadow-lg">
-                <h1 class="text-1xl text-center mt-4"><?php echo "$authorRecipe" ?></h1>
+                <h1 class="text-1xl text-center mt-4"><a href="/profile?user=<?php echo $userRecipe['id_user'] ?>"><?php echo "$authorRecipe" ?></a></h1>
                 <h1 class="text-2xl font-bold text-center"><?php echo $avgRating ?></h1>
             </div>
         </div>

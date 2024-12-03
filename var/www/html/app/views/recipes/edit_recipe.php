@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../../models/Recipes.php';
 require_once __DIR__ . '/../../../config/config.php';
 require_once __DIR__ . '/../../controllers/profile_controller.php';
-
 $recipes = new Recipes($pdo);
 
 if (isset($_SESSION['username'])) {
@@ -78,6 +77,7 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
 <head>
     <meta charset="UTF-8">
     <title>Editar Receta</title>
+    
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     <style>
         .scrollable {
@@ -94,13 +94,13 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1"></div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm font-semibold text-blue-800 hover:text-lg">INICIO</a>
-                <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
-                <a href="/recipes" class="text-sm font-semibold text-red-800 hover:text-lg">OTRAS RECETAS</a>
+                <a href="/" class="text-lg font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-lg font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"><?php echo strtoupper($_SESSION['username']) ?></a>
+                <a href="/recipes" class="text-lg font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">OTRAS RECETAS</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <form action="/auth" method="post">
-                    <input type="submit" name="closeSession" value="Cerrar sesión" class="text-sm font-semibold text-gray-800 hover:text-lg">
+                    <input type="submit" name="closeSession" value="Cerrar sesión" class="text-lg font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
                     <span aria-hidden="true">&rarr;</span>
                 </form>
             </div>
@@ -122,7 +122,7 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
         <div class="mt-8">
             <div class="flex justify-end"></div>
             <h1 class="text-2xl font-bold text-center"><?php echo $recipe['title'] ?></h1>
-            <div class="flex justify-center">
+            <div class="flex justify-center mt-6">
                 <form action="/recipes/edit?id_recipe=<?php echo $id_recipe ?>" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta receta?');">
                     <input type="hidden" name="deleteRecipe" value="true">
                     <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">Eliminar Receta</button>

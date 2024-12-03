@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/app/controllers/session_controller.php';
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 switch ($request) {
     case '':
@@ -24,19 +25,18 @@ switch ($request) {
         break;
         
     case '/recipes':
-        session_start();
         require __DIR__ . '/app/views/recipes/recipes.php';
         break;
 
     case '/recipes/view':
-        session_start();
         require __DIR__ . '/app/views/recipes/view_recipe.php';
         break;
         //------------------------- VISTAS PROTEGIDAS POR SESIONES ------------------ 
     case '/profile':
     case '/followers':
+    case '/profile/edit':
         // me he pegado 2 horas con este error y era simplemente empezar la sesión aquí
-        session_start();
+        // la he cambiado arriba la session para meterle el timeout
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             switch ($request) {
                 case '/profile':
@@ -45,8 +45,8 @@ switch ($request) {
                 case '/followers':
                     require __DIR__ . '/app/views/user/followers.php';
                     break;
-                case '/validarReceta':
-                    require __DIR__ . '/app/controllers/recipes_controller.php';
+                case '/profile/edit':
+                    require __DIR__ . '/app/views/user/edit_profile.php';
                     break;
             }
         } else {
@@ -59,7 +59,6 @@ switch ($request) {
     case '/recipes/mine':
     case '/validarReceta':
     case '/recipes/edit':
-        session_start();
         if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
             switch ($request) {
                 case '/admin':

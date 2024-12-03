@@ -1,5 +1,4 @@
 <?php
-
 class AdminController
 {
     private $db;
@@ -17,6 +16,14 @@ class AdminController
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['username'];
+    }
+
+    public function toggleAdmin($user)
+    {
+        $newStatus = $user['is_admin'] == 1 ? 0 : 1;
+        $query = "UPDATE users SET is_admin = ? WHERE id_user = ?";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([$newStatus, $user['id_user']]);
     }
 
     public function getAllUsers()

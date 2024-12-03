@@ -10,14 +10,14 @@ if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
 $recipes = new Recipes($pdo);
 $recetasPorPagina = 4;
 $recipesController = new PaginationController($pdo);
-$paginationData = $recipesController->getPaginatedRecipes( $recetasPorPagina);
+$paginationData = $recipesController->getPaginatedRecipes($recetasPorPagina);
 
 $recetasPagina = $paginationData['recetasPagina'];
 $paginaActual = $paginationData['paginaActual'];
 $totalPaginas = $paginationData['totalPaginas'];
 
 // usuario
-if(isset($_SESSION['username'])){
+if (isset($_SESSION['username'])) {
     $user = new ProfileController($pdo);
     $userData = $user->getUserDataByName($_SESSION['username']);
 }
@@ -30,6 +30,7 @@ if(isset($_SESSION['username'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>recetas</title>
+    <?php if (isset($_SESSION['username'])) { ?><?php }?>
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
@@ -73,26 +74,26 @@ if(isset($_SESSION['username'])){
                 </div>
                 <?php if (isset($_SESSION['logged_in'])) { ?>
                     <div class="hidden lg:flex lg:gap-x-12">
-                        <a href="/" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">INICIO</a>
-                        <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                        <a href="/" class="text-lg/6 font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                        <a href="profile?user=<?php echo $userData['id_user'] ?>" class="text-lg/6 font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"><?php echo strtoupper($_SESSION['username']) ?></a>
                         <?php if (isset($menuAdmin)) {
-                            echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-red-800 hover:text-lg">MIS RECETAS</a>';
+                            echo '<a href="recipes/mine" class="text-lg/6 font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">MIS RECETAS</a>';
                         } else {
-                            echo '<a href="/followers?user=' . $userData["id_user"] . '" class="text-sm/6 font-semibold text-red-800 hover:text-lg">SEGUIDORES</a>';
+                            echo '<a href="/followers?user=' . $userData["id_user"] . '" class="text-lg/6 font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">SEGUIDORES</a>';
                         } ?>
 
                     </div>
                     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                         <form action="auth" method="post">
                             <input type="submit" name="closeSession" value="Cerrar sesión"
-                                class="text-sm/6 font-semibold text-gray-800 hover:text-lg"> <span
+                                class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"> <span
                                 aria-hidden="true">&rarr;</span></input>
                         </form>
                     </div>
                 <?php } else { ?>
                     <div class="hidden lg:flex lg:gap-x-12 lg:justify-center">
-                        <a href="login" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">INICIAR SESIÓN</a>
-                        <a href="register" class="text-sm/6 font-semibold text-purple-800 hover:text-lg">REGISTRARSE</a>
+                        <a href="login" class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIAR SESIÓN</a>
+                        <a href="register" class="text-lg/6 font-semibold text-purple-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">REGISTRARSE</a>
                     </div>
                 <?php } ?>
             </nav>

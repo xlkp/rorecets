@@ -51,6 +51,7 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rorecets</title>
+
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
@@ -62,15 +63,16 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">RECETAS</a>
+                    <a href="/" class="text-lg/6 font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105 hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                    <a href="recipes" class="text-lg/6 font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">RECETAS</a>
                     <?php if ($userData['username'] !== $_SESSION['username']) { ?>
-                        <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">MI PERFIL</a>
+                        <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-lg/6 font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">MI PERFIL</a>
                     <?php } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
                         <input type="submit" name="closeSession" value="Cerrar sesión"
-                            class="text-sm/6 font-semibold text-gray-800 hover:text-lg"> <span
+                            class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"> <span
                             aria-hidden="true">&rarr;</span></input>
                     </form>
                 </div>
@@ -124,7 +126,7 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                     <?php } else { ?>
                         <div class="mt-10 flex items-center justify-center gap-x-6">
                             <a href="followers?user=<?php echo $mySelf['id_user'] ?>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
-                            <a href="profile/edit" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
+                            <a href="profile/edit" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Editar Perfil</a>
                         </div>
                     <?php } ?>
                 </div>

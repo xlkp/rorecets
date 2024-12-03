@@ -147,6 +147,26 @@ create table followers (
 
 ```
 
+## POBLATION
+
+// USUARIOS
+
+- Alice: Alice123
+- Bob: Bob2024
+- Charlie: Char2024
+- Diana: Diana456
+- Edward: Edw5678
+- Fiona: Fiona890
+- George: Geor1234
+- Hannah: Hann4567
+- Ian: Ian8901
+- Julia: Jul2345
+- Kevin: Kevi678
+- Linda: Lind789
+- Michael: Micha345
+- Nora: Nora567
+- Oliver: Oliv123
+
 ## USE CASES
 
 - unregistered user : login, register, see home page.

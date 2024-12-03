@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . ('/../app/controllers/session_controller.php');
 require __DIR__ . ('/../app/controllers/profile_controller.php');
 require __DIR__ . ('/../config/config.php');
 
@@ -14,6 +13,7 @@ $userData = $user->getUserDataByName($_SESSION['username']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rorecets</title>
+    
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
@@ -25,47 +25,20 @@ $userData = $user->getUserDataByName($_SESSION['username']);
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="recipes" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">RECETAS</a>
-                    <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="recipes" class="text-lg/6 font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">RECETAS</a>
+                    <a href="profile?user=<?php echo $userData['id_user'] ?>" class="text-lg/6 font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"><?php echo strtoupper($_SESSION['username']) ?></a>
                     <?php if (isset($menuAdmin)) {
-                        echo '<a href="admin" class="text-sm/6 font-semibold text-red-800 hover:text-lg">' . $menuAdmin . '</a>';
+                        echo '<a href="admin" class="text-lg/6 font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">' . $menuAdmin . '</a>';
                     } ?>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
                         <input type="submit" name="closeSession" value="Cerrar sesión"
-                            class="text-sm/6 font-semibold text-gray-800 hover:text-lg"> <span
+                            class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"> <span
                             aria-hidden="true">&rarr;</span></input>
                     </form>
                 </div>
             </nav>
-            <div class="lg:hidden" role="dialog" aria-modal="true">
-                <div class="fixed inset-0 z-50"></div>
-                <div
-                    class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-                    <div class="mt-6 flow-root">
-                        <div class="-my-6 divide-y divide-gray-500/10">
-                            <div class="space-y-2 py-6">
-                                <a href="recipes"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">recetas</a>
-                                <a href="profile"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"><?php echo strtoupper($_SESSION['username']) ?></a>
-                                <a href="followers"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">mis seguidores</a>
-                                <?php if (isset($menuAdmin)) {
-                                    echo '<a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">' . $menuAdmin . '</a>';
-                                } ?>
-                            </div>
-                            <div class="py-6">
-                                <form action="auth" method="post">
-                                    <input type="submit" name="closeSession" value="Cerrar sesión"
-                                        class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"></input>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </header>
 
         <div class="relative isolate px-6 pt-14 lg:px-8">
@@ -80,7 +53,7 @@ $userData = $user->getUserDataByName($_SESSION['username']);
                     <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
                         <?php if (isset($menuAdmin)) {
                             echo 'Bienvenido administrador';
-                        } else echo 'Bienvenido, ' . $_SESSION['username'] . '!🙉'; ?></h1>
+                        } else echo 'Hola, ' . $_SESSION['username'] . '!🙉'; ?></h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                         <?php if (isset($menuAdmin)) {
                             echo 'Procura ayudar a la gente con lo que necesite 😊👍';
@@ -92,7 +65,7 @@ $userData = $user->getUserDataByName($_SESSION['username']);
                         } else echo '<a href="recipes"
                             class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Recetas mejor valoradas</a>'; ?>
                         <?php if (isset($menuAdmin)) {
-                            echo '<a href="recipes" class="text-sm/6 font-semibold text-gray-900">Moderar recetas<span
+                            echo '<a href="recipes" class="text-lg/6 font-semibold text-gray-900">Moderar recetas<span
                                 aria-hidden="true">→</span></a>';
                         } ?>
                     </div>

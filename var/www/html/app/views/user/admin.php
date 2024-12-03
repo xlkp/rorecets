@@ -36,6 +36,15 @@ if (isset($_SESSION['username'])) {
         header('Location: /admin');
         exit();
     }
+
+    // he metido que se puedan quitar de administradores a ellos mismos y a otros
+    // administradores, porque aun no hay roles de superadmin y beyond
+    if (isset($_POST['toggleAdmin']) && isset($_POST['user_id'])) {
+        $user = $profileController->getUserDataById($_POST['user_id']);
+        $adminController->toggleAdmin($user);
+        header('Location: /admin');
+        exit();
+    }
 } else {
     header('Location: /404');
     exit();
@@ -50,6 +59,7 @@ if (isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rorecets</title>
+
     <script
         src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 
@@ -68,14 +78,15 @@ if (isset($_SESSION['username'])) {
                 <div class="flex lg:flex-1">
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/recipes" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">RECETAS</a>
-                    <a href="/recipes/mine" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg">CREAR RECETA</a>
-                    <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-sm/6 font-semibold text-red-800 hover:text-lg">MI PERFIL</a>
+                    <a href="/" class="text-lg/6 font-semibold text-purple-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">INICIO</a>
+                    <a href="/recipes" class="text-lg/6 font-semibold text-blue-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">RECETAS</a>
+                    <a href="/recipes/mine" class="text-lg/6 font-semibold text-yellow-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">CREAR RECETA</a>
+                    <a href="/profile?user=<?php echo $mySelf['id_user']; ?>" class="text-lg/6 font-semibold text-red-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105">MI PERFIL</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="auth" method="post">
                         <input type="submit" name="closeSession" value="Cerrar sesión"
-                            class="text-sm/6 font-semibold text-gray-800 hover:text-lg"> <span
+                            class="text-lg/6 font-semibold text-gray-800 hover:text-lg hover:text-blue-500 transition duration-300 ease-in-out transform hover:scale-105"> <span
                             aria-hidden="true">&rarr;</span></input>
                     </form>
                 </div>
@@ -101,12 +112,26 @@ if (isset($_SESSION['username'])) {
                                 <?php foreach ($users as $user): ?>
                                     <div class="flex justify-between items-center p-2 border-b">
                                         <span><a href="/profile?user=<?php echo $user['id_user']; ?>"><?php echo ($user['username']); ?></a></span>
-                                        <form method="POST" class="inline">
-                                            <input type="hidden" name="user_id" value="<?php echo $user['id_user']; ?>">
-                                            <button type="submit" name="deleteUser" class="bg-red-500 text-white px-4 py-2 rounded">
-                                                Eliminar
-                                            </button>
-                                        </form>
+                                        <div class="flex gap-2">
+                                            <form method="POST" class="inline">
+                                                <input type="hidden" name="user_id" value="<?php echo $user['id_user']; ?>">
+                                                <?php if ($user['is_admin'] == 1): ?>
+                                                    <button type="submit" name="toggleAdmin" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                                                        Quitar Admin
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button type="submit" name="toggleAdmin" class="bg-green-500 text-white px-4 py-2 rounded">
+                                                        Hacer Admin
+                                                    </button>
+                                                <?php endif; ?>
+                                            </form>
+                                            <form method="POST" class="inline">
+                                                <input type="hidden" name="user_id" value="<?php echo $user['id_user']; ?>">
+                                                <button type="submit" name="deleteUser" class="bg-red-500 text-white px-4 py-2 rounded">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
