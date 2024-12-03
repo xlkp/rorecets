@@ -45,6 +45,10 @@ También he implementado en la estructura lo que viene a ser los modulos, pero e
 
 ## EXTRAS
 
+// Imágenes related
+
+Cuando el usuario borra una receta en el servidor tambien se borra la imagen.
+
 // 20241104 cambiada manera de usar el router
 
 - Router con .htaccess para redireccionar a inicio:

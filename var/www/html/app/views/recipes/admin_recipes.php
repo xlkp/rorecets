@@ -1,12 +1,18 @@
 <?php
 require_once __DIR__ . '/../../controllers/recipes_controller.php';
+require_once __DIR__ . '/../../controllers/profile_controller.php';
 
-$recipes = new Recipes($pdo);
-$userRecipes = $recipes->getUserRecipes();
-$allIngredients = $recipes->getAllIngredients();
-$allIngredientsJson = json_encode($allIngredients);
+if (isset($_SESSION['username'])) {
+    $user = new ProfileController($pdo);
+    $userData = $user->getUserDataByName($_SESSION['username']);
+
+    $recipes = new Recipes($pdo);
+    $userRecipes = $recipes->getUserRecipes();
+    $allIngredients = $recipes->getAllIngredients();
+    $allIngredientsJson = json_encode($allIngredients);
+}
+
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -63,9 +69,9 @@ $allIngredientsJson = json_encode($allIngredients);
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1"></div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                <a href="/profile" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
-                <a href="/recipes" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
+                <a href="/" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">INICIO</a>
+                <a href="/profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                <a href="/recipes" class="text-sm/6 font-semibold text-red-800 hover:text-lg">OTRAS RECETAS</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <form action="/auth" method="post">
@@ -131,7 +137,7 @@ $allIngredientsJson = json_encode($allIngredients);
                             </label>
                             <label for="description" class="relative block rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 mt-4">
                                 <input type="text" name="description" id="description" class="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0" placeholder="Pequeña descripción" required />
-                                <span class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">Descripción breve</span>
+                                <span class="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">⏰ Tiempo de elaboración</span>
                             </label>
                         </div>
                     </div>
@@ -185,7 +191,7 @@ $allIngredientsJson = json_encode($allIngredients);
                     <a class="block" href="/recipes/view?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                         <div class="image-container">
                             <img src="<?php echo '/../../../../assets/img/recipes/' . $recipe['image_recipe']; ?>" alt="<?php echo ($recipe['title']); ?>" class="image h-56 w-full rounded-bl-3xl rounded-tr-3xl object-cover sm:h-64 lg:h-72">
-                            <a class="edit-button" href="/recipes/view?id_recipe=<?php echo $recipe['id_recipe']; ?>">
+                            <a class="edit-button" href="/recipes/edit?id_recipe=<?php echo $recipe['id_recipe']; ?>">
                                 ✏️ Editar
                             </a>
                         </div>

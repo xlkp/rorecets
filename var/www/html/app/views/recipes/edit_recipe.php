@@ -1,9 +1,14 @@
 <?php
 require_once __DIR__ . '/../../models/Recipes.php';
 require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../controllers/profile_controller.php';
 
 $recipes = new Recipes($pdo);
 
+if (isset($_SESSION['username'])) {
+    $user = new ProfileController($pdo);
+    $userData = $user->getUserDataByName($_SESSION['username']);
+}
 if (isset($_GET['id_recipe']) && !empty($_GET['id_recipe'])) {
     $id_recipe = intval($_GET['id_recipe']);
 } else {
@@ -89,9 +94,9 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1"></div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="/" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                <a href="/profile" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
-                <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
+                <a href="/" class="text-sm font-semibold text-blue-800 hover:text-lg">INICIO</a>
+                <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                <a href="/recipes" class="text-sm font-semibold text-red-800 hover:text-lg">OTRAS RECETAS</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <form action="/auth" method="post">
@@ -134,7 +139,7 @@ $ingredients = $recipes->getIngredientsByRecipeId($id_recipe);
                         <input type="text" name="title" value="<?php echo ($recipe['title']); ?>" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" required />
                     </label>
                     <label class="block">
-                        <span class="text-gray-700">Descripción breve</span>
+                        <span class="text-gray-700">⏰ Tiempo de elaboración</span>
                         <input type="text" name="description" value="<?php echo ($recipe['description']); ?>" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm" required />
                     </label>
                     <label class="block">

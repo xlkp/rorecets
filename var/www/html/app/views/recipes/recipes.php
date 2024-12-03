@@ -73,12 +73,12 @@ if(isset($_SESSION['username'])){
                 </div>
                 <?php if (isset($_SESSION['logged_in'])) { ?>
                     <div class="hidden lg:flex lg:gap-x-12">
-                        <a href="/" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                        <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                        <a href="/" class="text-sm/6 font-semibold text-blue-800 hover:text-lg">INICIO</a>
+                        <a href="profile?user=<?php echo $userData['id_user']?>" class="text-sm/6 font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
                         <?php if (isset($menuAdmin)) {
-                            echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">CREAR RECETAS</a>';
+                            echo '<a href="recipes/mine" class="text-sm/6 font-semibold text-red-800 hover:text-lg">MIS RECETAS</a>';
                         } else {
-                            echo '<a href="/followers?user=' . $userData["id_user"] . '" class="text-sm/6 font-semibold text-gray-800 hover:text-lg">SEGUIDORES</a>';
+                            echo '<a href="/followers?user=' . $userData["id_user"] . '" class="text-sm/6 font-semibold text-red-800 hover:text-lg">SEGUIDORES</a>';
                         } ?>
 
                     </div>

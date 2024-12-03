@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../models/Recipes.php';
 require_once __DIR__ . '/../../../config/config.php';
 require_once __DIR__ . '/../../controllers/comment_controller.php';
 require_once __DIR__ . '/../../controllers/profile_controller.php';
+
 if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
     $menuAdmin = true;
 }
@@ -11,7 +12,7 @@ $recipes = new Recipes($pdo);
 
 if (isset($_GET['id_recipe']) && $_GET['id_recipe'] !== '') {
     $id_recipe = intval($_GET['id_recipe']);
-}else {
+} else {
     header('Location: /404');
     exit();
 }
@@ -62,7 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_recipe'])) {
 if (isset($_SESSION['username'])) {
     $user = new ProfileController($pdo);
     $userData = $user->getUserDataByName($_SESSION['username']);
-} 
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_reply'])) {
+    $id_recipe = $_GET['id_recipe'];
+    $parent_comment_id = $_POST['parent_comment_id'];
+    $reply_description = $_POST['reply_description'];
+    $id_user = $userData['id_user'];
+
+    $stmt = $pdo->prepare("INSERT INTO comments (id_recipe, id_user, id_recipe_comment, description, comment_date) VALUES (?, ?, ?, ?, NOW())");
+    $stmt->execute([$id_recipe, $id_user, $parent_comment_id, $reply_description]);
+
+    header("Location: /recipes/view?id_recipe=" . $id_recipe);
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +86,16 @@ if (isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <title>Ver Receta</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    <script>
+        function toggleReplyForm(commentId) {
+            var form = document.getElementById('reply-form-' + commentId);
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+    </script>
     <style>
         .scrollable {
             max-height: 300px;
@@ -88,9 +112,9 @@ if (isset($_SESSION['username'])) {
             <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div class="flex lg:flex-1"></div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/" class="text-sm font-semibold text-gray-800 hover:text-lg">INICIO</a>
-                    <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-purple-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
-                    <a href="/recipes" class="text-sm font-semibold text-gray-800 hover:text-lg">OTRAS RECETAS</a>
+                    <a href="/" class="text-sm font-semibold text-blue-800 hover:text-lg">INICIO</a>
+                    <a href="/profile?user=<?php echo $userData['id_user'] ?>" class="text-sm font-semibold text-yellow-800 hover:text-lg"><?php echo strtoupper($_SESSION['username']) ?></a>
+                    <a href="/recipes" class="text-sm font-semibold text-red-800 hover:text-lg">OTRAS RECETAS</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end">
                     <form action="/auth" method="post">
@@ -133,7 +157,7 @@ if (isset($_SESSION['username'])) {
                                 <p class="mt-1 text-gray-800"><?php echo ($recipe['recipe_type']); ?></p>
                             </div>
                             <div>
-                                <span class="text-gray-700">Descripción breve:</span>
+                                <span class="text-gray-700">⏰ Tiempo de elaboración:</span>
                                 <p class="mt-1 text-gray-800"><?php echo ($recipe['description']); ?></p>
                             </div>
                             <div>
@@ -193,13 +217,40 @@ if (isset($_SESSION['username'])) {
                         }
                     ?>
                         <div class="border p-4 mt-4 rounded-lg shadow-md bg-gray-50">
-                            <a href="/profile?user=<?php echo $comment['id_user']?>" class="font-semibold text-lg"><?php echo ($comment['username']); ?></a>
+                            <a href="/profile?user=<?php echo $comment['id_user'] ?>" class="font-semibold text-lg"><?php echo ($comment['username']); ?></a>
+                            <?php
+                            if (!empty($comment['id_recipe_comment'])) {
+                                // Fetch parent comment info (add this query earlier in your PHP logic)
+                                $parentQuery = "SELECT username, description FROM comments JOIN users ON comments.id_user = users.id_user WHERE id_comment = ?";
+                                $parentStmt = $pdo->prepare($parentQuery);
+                                $parentStmt->execute([$comment['id_recipe_comment']]);
+                                $parentComment = $parentStmt->fetch();
+
+                                if ($parentComment) {
+                                    echo '<span class="text-gray-500 text-sm">
+                    respondiendo a <span class="font-medium">' . ($parentComment['username']) . '</span>: 
+                    "' . (substr($parentComment['description'], 0, 50)) . (strlen($parentComment['description']) > 50 ? '...' : '') . '"
+                </span>';
+                                }
+                            }
+                            ?>
                             <p><?php echo $userRatingStars; ?></p>
                             <p class="mt-2 text-gray-800"><?php echo ($comment['description']); ?></p>
                             <p class="mt-2 text-sm text-gray-500"><?php echo ($comment['comment_date']); ?></p>
 
+                            <button type="button" class="mt-2 text-blue-500 hover:text-blue-700" onclick="toggleReplyForm(<?php echo $comment['id_comment']; ?>)">
+                                💬 Comentar
+                            </button>
+
+                            <div id="reply-form-<?php echo $comment['id_comment']; ?>" class="mt-2 hidden">
+                                <form action="/recipes/view?id_recipe=<?php echo $id_recipe ?>" method="post">
+                                    <input type="hidden" name="parent_comment_id" value="<?php echo $comment['id_comment']; ?>">
+                                    <textarea name="reply_description" required class="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe tu respuesta"></textarea>
+                                    <button type="submit" name="add_reply" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Responder</button>
+                                </form>
+                            </div>
                             <?php if (isset($menuAdmin)): ?>
-                                <form method="post" action="/recipes/view?id_recipe=<?php echo $id_recipe?>" class="mt-2">
+                                <form method="post" action="/recipes/view?id_recipe=<?php echo $id_recipe ?>" class="mt-2">
                                     <input type="hidden" name="id_comment" value="<?php echo ($comment['id_comment']); ?>">
                                     <button type="submit" name="delete_comment" class="text-red-500 hover:text-red-700">Eliminar</button>
                                 </form>
@@ -208,7 +259,6 @@ if (isset($_SESSION['username'])) {
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Add Comment Form -->
                 <?php if (isset($_SESSION['logged_in'])) { ?>
                     <form action="/recipes/view?id_recipe=<?php echo $id_recipe ?>" method="post" class="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
                         <h3 class="text-lg font-semibold mb-4">Añadir un comentario</h3>

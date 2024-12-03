@@ -91,7 +91,7 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                         <?php if ($userData['username'] !== $_SESSION['username']) { ?>
                             <?php if ($countUserFollowers > 1) { ?>
-                                <?php echo $countFollowers; ?> seguidores
+                                <?php echo $countUserFollowers; ?> seguidores
                             <?php } else if ($countUserFollowers > 0) { ?>
                                 <?php echo $countUserFollowers;  ?> seguidor
                             <?php } else { ?>
@@ -123,7 +123,8 @@ if (isset($_GET['user']) && $_GET['user'] !== '') {
                         </div>
                     <?php } else { ?>
                         <div class="mt-10 flex items-center justify-center gap-x-6">
-                            <a href="followers?user=<?php echo $mySelf['id_user']?>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
+                            <a href="followers?user=<?php echo $mySelf['id_user'] ?>" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
+                            <a href="profile/edit" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Seguidores</a>
                         </div>
                     <?php } ?>
                 </div>
